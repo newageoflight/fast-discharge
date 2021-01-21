@@ -1,18 +1,18 @@
 import React from 'react'
+import { RenderLeafProps } from 'slate-react'
 
-// This whole thing is currently based on the MD editor example from Slate.js
-// The key feature to add is just the ability to tab through stuff
+export const Leaf: React.FC<RenderLeafProps> = ({ attributes, children, leaf }) => {
+    if (leaf.bold)
+        children = <strong>{children}</strong>
+        
+    if (leaf.code)
+        children = <code>{children}</code>
 
-interface Props {
-    attributes: any;
-    children: any;
-    leaf: any;
-}
+    if (leaf.italic)
+        children = <em>{children}</em>
 
-export const Leaf: React.FC<Props> = ({attributes, children, leaf}) => {
-    return (
-        <span {...attributes}>
-            {children}
-        </span>
-    )
+    if (leaf.underline)
+        children = <u>{children}</u>
+        
+    return <span {...attributes}>{children}</span>
 }

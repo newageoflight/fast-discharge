@@ -1,0 +1,35 @@
+header {
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.container {
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.toolbar-container ul {
+  padding-left: 0;
+}
+
+.toolbar-container ul > li {
+  display: inline-block;
+}
+
+.toolbar-container ul > li button {
+  font-size: 1rem;
+  outline: none;
+  border: none;
+  -webkit-transition: 0.3s all ease;
+  transition: 0.3s all ease;
+  background: none;
+}
+
+.toolbar-container ul > li button:hover {
+  background-color: #ddd;
+}
+
+.toolbar-container ul > li button:active {
+  background-color: #999;
+}
+/*# sourceMappingURL=App.css.map */

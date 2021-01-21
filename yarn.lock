@@ -1196,6 +1196,16 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
+"@iconify/react-with-api@^1.0.0-rc.5":
+  version "1.0.0-rc.5"
+  resolved "https://registry.yarnpkg.com/@iconify/react-with-api/-/react-with-api-1.0.0-rc.5.tgz#b9fdb916355b64e386fbd974991e98f1341580a9"
+  integrity sha512-l0tuBIosZWg7HXbDFCupcAY/AqgI1t5WfDu7hyJO08JkV2/xhdCeVmTpu117rj3M72FX52E79ifA6oecIUPNyg==
+
+"@iconify/react@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@iconify/react/-/react-1.1.3.tgz#ebe4d3e5f5dea23cd6a9634acd7a0a25c7414a59"
+  integrity sha512-ReZNJyr89AfED6XZIXkhsJiNv2taT3j1cTo1HVPHMsrKOz6gAYdXtD2kDWF6+GVoFUxpmnO0fMcA6yCyTf6Tow==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
