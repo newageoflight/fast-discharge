@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useState } from "react";
 import isHotkey from "is-hotkey";
 import { Editable, withReact, Slate } from "slate-react";
-import { createEditor, Node } from "slate";
+import { createEditor, Node, Range } from "slate";
 import { withHistory } from "slate-history";
 
-import { BLOCK_HOTKEYS, HOTKEYS, toggleMark } from "../utils/EditorUtils";
+import { BLOCK_HOTKEYS, FUNCTION_HOTKEYS, HOTKEYS } from '../utils/EditorConsts';
+import { toggleMark } from "../utils/EditorUtils";
 
 import { Element } from './Element';
 import { Leaf } from './Leaf';
@@ -15,6 +16,7 @@ import { Toolbar } from './Toolbar'
 // TODO: add an onChange handler to the editor that will replace any detected {{ elements with a template maker dropdown
 // the template maker dropdown should just be an editable void that has the ability to take a name input and add some options
 // TODO: add the ability to import and save templates as MD files
+// TODO: add the ability to use the tab key to navigate through templates
 import { toggleBlock } from './../utils/EditorUtils';
 
 export const RichTextEditor: React.FC = () => {
@@ -24,7 +26,16 @@ export const RichTextEditor: React.FC = () => {
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
     return (
-        <Slate editor={editor} value={value} onChange={value => setValue(value)}>
+        <Slate editor={editor} value={value} onChange={value => {
+            setValue(value);
+
+            const { selection } = editor;
+            // if nothing is currently selected under the cursor
+            if (selection && Range.isCollapsed(selection)) {
+                const [start] = Range.edges(selection);
+                // if the two characters before the cursor are {{, select them and replace with a template block
+            }
+        }}>
             <Toolbar>
                 <MarkButton format="bold" icon="gridicons:bold" />
                 <MarkButton format="italic" icon="gridicons:italic" />
@@ -55,6 +66,13 @@ export const RichTextEditor: React.FC = () => {
                             e.preventDefault()
                             const block = BLOCK_HOTKEYS[hotkey]
                             toggleBlock(editor, block)
+                        }
+                    }
+                    for (const hotkey in FUNCTION_HOTKEYS) {
+                        if (isHotkey(hotkey, e as any)) {
+                            e.preventDefault()
+                            const fn = FUNCTION_HOTKEYS[hotkey]
+                            fn(editor)
                         }
                     }
                 }}

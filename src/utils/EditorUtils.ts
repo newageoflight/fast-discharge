@@ -1,21 +1,5 @@
-import { Editor, Transforms, Element as SlateElement } from 'slate';
-
-export const HOTKEYS: Record<string, string> = {
-    'mod+b': 'bold',
-    'mod+i': 'italic',
-    'mod+u': 'underline',
-}
-
-export const BLOCK_HOTKEYS: Record<string, string> = {
-    'mod+alt+1': 'heading-one',
-    'mod+alt+2': 'heading-two',
-    'mod+alt+3': 'heading-three',
-    'mod+alt+4': 'heading-four',
-    'mod+.': 'bulleted-list',
-    'mod+/': 'numbered-list',
-}
-
-export const LIST_TYPES: string[] = ['numbered-list', 'bulleted-list']
+import { Editor, Transforms, Element as SlateElement, Node, NodeEntry, Path } from 'slate';
+import { LIST_TYPES } from './EditorConsts';
 
 export const toggleBlock = (editor: Editor, format: string) => {
     const isActive = isBlockActive(editor, format);
@@ -57,4 +41,67 @@ export const isBlockActive = (editor: Editor, format: string) => {
 export const isMarkActive = (editor: Editor, format: string) => {
     const marks = Editor.marks(editor);
     return marks ? marks[format] === true : false
+}
+
+export const indentListItem = (editor: Editor): void => {
+    let pathToCurrentItem = editor.selection!
+    let currentPointPosition = pathToCurrentItem.focus
+    let listItemPath = currentPointPosition.path.slice(0, currentPointPosition.path.length - 2)
+
+    let previousSiblingNodeEntry = Editor.previous(editor, {at: listItemPath}) as NodeEntry;
+    if (!!previousSiblingNodeEntry) {
+        let [previousSiblingNode, previousSiblingPath] = previousSiblingNodeEntry;
+
+        let hasListChildren = false, listChildPos: Path = [], childrenCount = 0;
+        
+        for (let [child, pos] of Node.children(previousSiblingNode, [])) {
+            if (child.type === "bulleted-list" || child.type === "numbered-list") {
+                hasListChildren = true;
+                listChildPos = pos;
+            }
+            ++childrenCount;
+        }
+
+        if (!hasListChildren) {
+            let [parentNode] = Editor.node(editor, listItemPath.slice(0, listItemPath.length-1))
+            let parentType = parentNode.type;
+            Transforms.wrapNodes(editor, {type: parentType, children: []} as SlateElement, {at: listItemPath})
+            Editor.withoutNormalizing(editor, () => Transforms.moveNodes(editor, {
+                at: listItemPath,
+                to: previousSiblingPath.concat([childrenCount])
+            }))
+        } else {
+            let absoluteChildPath = previousSiblingPath.concat(listChildPos);
+            let [absoluteChildNode] = Editor.node(editor, absoluteChildPath) as NodeEntry;
+            let absoluteNodeChildren = absoluteChildNode.children as Node[];
+            Editor.withoutNormalizing(editor, () => Transforms.moveNodes(editor, {
+                at: listItemPath,
+                to: absoluteChildPath.concat([absoluteNodeChildren.length])
+            }))
+        }
+    }
+}
+
+export const dedentListItem = (editor: Editor): void => {
+    let pathToCurrentItem = editor.selection!
+    let currentPointPosition = pathToCurrentItem.focus
+    let listItemPath = currentPointPosition.path.slice(0, currentPointPosition.path.length - 2)
+    
+    if (listItemPath.length > 2) {
+        let [originalParentNode] = Editor.node(editor, listItemPath.slice(0, listItemPath.length-1)) as NodeEntry;
+        let originalParentChildren = originalParentNode.children as Node[];
+        let origin = listItemPath;
+
+        if (originalParentChildren.length === 1) {
+            Transforms.unwrapNodes(editor, {at: listItemPath.slice(0, listItemPath.length - 1)})
+            origin = listItemPath.slice(0, listItemPath.length - 1)
+        }
+        
+        let destination = listItemPath.slice(0, listItemPath.length - 2)
+        destination[destination.length-1]++
+        Editor.withoutNormalizing(editor, () => Transforms.moveNodes(editor, {
+            at: origin,
+            to: destination
+        }))
+    }
 }
