@@ -3,8 +3,6 @@ import { RenderElementProps } from "slate-react";
 
 export const Element: React.FC<RenderElementProps> = ({ attributes, children, element }) => {
     switch (element.type) {
-        case 'block-quote':
-            return <blockquote {...attributes}>{children}</blockquote>
         case 'bulleted-list':
             return <ul {...attributes}>{children}</ul>
         case 'numbered-list':
@@ -13,6 +11,10 @@ export const Element: React.FC<RenderElementProps> = ({ attributes, children, el
             return <h1 {...attributes}>{children}</h1>
         case 'heading-two':
             return <h2 {...attributes}>{children}</h2>
+        case 'heading-three':
+            return <h3 {...attributes}>{children}</h3>
+        case 'heading-four':
+            return <h4 {...attributes}>{children}</h4>
         case 'list-item':
             return <li {...attributes}>{children}</li>
         default:

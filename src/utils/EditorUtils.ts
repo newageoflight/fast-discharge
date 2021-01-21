@@ -6,6 +6,15 @@ export const HOTKEYS: Record<string, string> = {
     'mod+u': 'underline',
 }
 
+export const BLOCK_HOTKEYS: Record<string, string> = {
+    'mod+alt+1': 'heading-one',
+    'mod+alt+2': 'heading-two',
+    'mod+alt+3': 'heading-three',
+    'mod+alt+4': 'heading-four',
+    'mod+.': 'bulleted-list',
+    'mod+/': 'numbered-list',
+}
+
 export const LIST_TYPES: string[] = ['numbered-list', 'bulleted-list']
 
 export const toggleBlock = (editor: Editor, format: string) => {

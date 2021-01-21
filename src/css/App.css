@@ -32,4 +32,13 @@ header {
 .toolbar-container ul > li button:active {
   background-color: #999;
 }
+
+.toolbar-container ul > li button.active {
+  background-color: lightblue;
+}
+
+.editor {
+  border-radius: 5px;
+  border: 1px solid lightgray;
+}
 /*# sourceMappingURL=App.css.map */

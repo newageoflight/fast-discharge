@@ -4,13 +4,18 @@ import { Editable, withReact, Slate } from "slate-react";
 import { createEditor, Node } from "slate";
 import { withHistory } from "slate-history";
 
-import { HOTKEYS, toggleMark } from "../utils/EditorUtils";
+import { BLOCK_HOTKEYS, HOTKEYS, toggleMark } from "../utils/EditorUtils";
 
 import { Element } from './Element';
 import { Leaf } from './Leaf';
 import { MarkButton } from "./MarkButton";
 import { BlockButton } from "./BlockButton";
 import { Toolbar } from './Toolbar'
+
+// TODO: add an onChange handler to the editor that will replace any detected {{ elements with a template maker dropdown
+// the template maker dropdown should just be an editable void that has the ability to take a name input and add some options
+// TODO: add the ability to import and save templates as MD files
+import { toggleBlock } from './../utils/EditorUtils';
 
 export const RichTextEditor: React.FC = () => {
     const [value, setValue] = useState<Node[]>(InitialState);
@@ -26,6 +31,8 @@ export const RichTextEditor: React.FC = () => {
                 <MarkButton format="underline" icon="gridicons:underline" />
                 <BlockButton format="heading-one" icon="gridicons:heading-h1" />
                 <BlockButton format="heading-two" icon="gridicons:heading-h2" />
+                <BlockButton format="heading-three" icon="gridicons:heading-h3" />
+                <BlockButton format="heading-four" icon="gridicons:heading-h4" />
                 <BlockButton format="bulleted-list" icon="ic:baseline-format-list-bulleted" />
                 <BlockButton format="numbered-list" icon="ic:baseline-format-list-numbered" />
             </Toolbar>
@@ -41,6 +48,13 @@ export const RichTextEditor: React.FC = () => {
                             e.preventDefault()
                             const mark = HOTKEYS[hotkey]
                             toggleMark(editor, mark)
+                        }
+                    }
+                    for (const hotkey in BLOCK_HOTKEYS) {
+                        if (isHotkey(hotkey, e as any)) {
+                            e.preventDefault()
+                            const block = BLOCK_HOTKEYS[hotkey]
+                            toggleBlock(editor, block)
                         }
                     }
                 }}

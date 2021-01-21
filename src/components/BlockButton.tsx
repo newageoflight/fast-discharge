@@ -1,7 +1,7 @@
 import React from 'react'
 import { Icon, InlineIcon } from "@iconify/react-with-api";
 import { useSlate } from 'slate-react';
-import { toggleBlock } from './../utils/EditorUtils';
+import { toggleBlock, isBlockActive } from './../utils/EditorUtils';
 
 interface Props {
     format: string;
@@ -10,10 +10,12 @@ interface Props {
 
 export const BlockButton: React.FC<Props> = ({ format, icon }) => {
     const editor = useSlate();
+    const isActive = isBlockActive(editor, format);
 
     return (
         <li>
-            <button onMouseDown={evt => {
+            <button className={isActive ? "active" : ""}
+                onMouseDown={evt => {
                 evt.preventDefault();
                 toggleBlock(editor, format)
             }}>
