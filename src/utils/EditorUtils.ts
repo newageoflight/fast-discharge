@@ -1,5 +1,23 @@
 import { Editor, Transforms, Element as SlateElement, Node, NodeEntry, Path } from 'slate';
-import { LIST_TYPES } from './EditorConsts';
+import { LIST_TYPES, HOTKEYS, BLOCK_HOTKEYS } from './EditorConsts';
+import { isHotkey } from 'is-hotkey';
+
+export const hotkeyHandler = (event: any, editor: Editor) => {
+    for (const hotkey in HOTKEYS) {
+        if (isHotkey(hotkey, event)) {
+            event.preventDefault()
+            const mark = HOTKEYS[hotkey]
+            toggleMark(editor, mark)
+        }
+    }
+    for (const hotkey in BLOCK_HOTKEYS) {
+        if (isHotkey(hotkey, event)) {
+            event.preventDefault()
+            const block = BLOCK_HOTKEYS[hotkey]
+            toggleBlock(editor, block)
+        }
+    }
+}
 
 export const toggleBlock = (editor: Editor, format: string) => {
     const isActive = isBlockActive(editor, format);

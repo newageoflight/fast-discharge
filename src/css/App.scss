@@ -1,15 +1,15 @@
-header {
+.App {
+    display: flex;
+    flex-direction: column;
     max-width: 90%;
     margin: 0 auto;
-}
-
-.container {
-    max-width: 90%;
-    margin: 0 auto;
+    min-height: 100vh;
 }
 
 .toolbar-container ul {
-    padding-left: 0;
+    margin: 0;
+    padding: 5px;
+    border-bottom: 1px solid lightgray;
 
     > li {
         display: inline-block;
@@ -37,6 +37,11 @@ header {
 }
 
 .editor {
-    border-radius: 5px;
+    padding: 0 10px;
+}
+
+.editor-container {
+    flex-grow: 1;
     border: 1px solid lightgray;
+    border-radius: 5px;
 }

@@ -9,13 +9,16 @@ function App() {
     <div className="App">
       <header>
         <h1>
-          <img src={logo} alt="Running man" style={{height: "1em", display: "inline-block", transform: "translateY(3px)"}} />
+          <img src={logo} alt="Running man" style={{height: "1em", display: "inline-block", transform: "translateY(6px)"}} />
           FastDischarge
         </h1>
       </header>
-      <div className="container">
+      <div className="editor-container">
         <RichTextEditor />
       </div>
+      <footer>
+        <p>&copy; Christopher Chen 2021-</p>
+      </footer>
     </div>
   );
 }

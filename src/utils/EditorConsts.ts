@@ -1,6 +1,3 @@
-import { Editor } from "slate";
-import { indentListItem, dedentListItem } from './EditorUtils';
-
 export const HOTKEYS: Record<string, string> = {
     'mod+b': 'bold',
     'mod+i': 'italic',
@@ -18,8 +15,3 @@ export const BLOCK_HOTKEYS: Record<string, string> = {
 }
 
 export const LIST_TYPES: string[] = ['numbered-list', 'bulleted-list']
-
-export const FUNCTION_HOTKEYS: Record<string, (editor: Editor) => void> = {
-    'mod+]': indentListItem,
-    'mod+[': dedentListItem
-}

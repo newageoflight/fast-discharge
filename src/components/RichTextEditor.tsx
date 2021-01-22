@@ -1,11 +1,7 @@
-import React, { useCallback, useMemo, useState } from "react";
-import isHotkey from "is-hotkey";
-import { Editable, withReact, Slate } from "slate-react";
-import { createEditor, Node, Range } from "slate";
+import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
+import { Editable, withReact, Slate, ReactEditor } from "slate-react";
+import { createEditor, Editor, Node, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
-
-import { BLOCK_HOTKEYS, FUNCTION_HOTKEYS, HOTKEYS } from '../utils/EditorConsts';
-import { toggleMark } from "../utils/EditorUtils";
 
 import { Element } from './Element';
 import { Leaf } from './Leaf';
@@ -13,17 +9,32 @@ import { MarkButton } from "./MarkButton";
 import { BlockButton } from "./BlockButton";
 import { Toolbar } from './Toolbar'
 
+import { hotkeyHandler } from './../utils/EditorUtils';
+import { withVoids } from './../wraps/VoidBlocks';
 // TODO: add an onChange handler to the editor that will replace any detected {{ elements with a template maker dropdown
 // the template maker dropdown should just be an editable void that has the ability to take a name input and add some options
 // TODO: add the ability to import and save templates as MD files
 // TODO: add the ability to use the tab key to navigate through templates
-import { toggleBlock } from './../utils/EditorUtils';
 
 export const RichTextEditor: React.FC = () => {
     const [value, setValue] = useState<Node[]>(InitialState);
+    const [target, setTarget] = useState<Range | undefined | null>();
+    const ref = useRef<HTMLDivElement | null>();
     const renderElement = useCallback(props => <Element {...props} />, [])
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
-    const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+    const editor = useMemo(() => withHistory(withReact(withVoids(createEditor()))), [])
+    
+    useEffect(() => {
+        // all this does is decide where to insert the new div
+        if (target) {
+            const el = ref.current;
+            const domRange = ReactEditor.toDOMRange(editor, target);
+            const rect = domRange.getBoundingClientRect();
+            el!.style.top = `${rect.top + window.pageYOffset + 24}px`
+            el!.style.left = `${rect.left + window.pageXOffset}px`
+        }
+        // eslint-disable-next-line
+    }, [target])
 
     return (
         <Slate editor={editor} value={value} onChange={value => {
@@ -33,7 +44,14 @@ export const RichTextEditor: React.FC = () => {
             // if nothing is currently selected under the cursor
             if (selection && Range.isCollapsed(selection)) {
                 const [start] = Range.edges(selection);
-                // if the two characters before the cursor are {{, select them and replace with a template block
+                // if the two characters beforce the cursor are {{, select them and replace with a template block
+                const before = Editor.before(editor, start, {distance: 2})
+                const beforeRange = before && Editor.range(editor, before, start)
+                const beforeText = beforeRange && Editor.string(editor, beforeRange)
+                const beforeMatch = beforeText && beforeText.match(/\{\{/);
+                if (beforeMatch) {
+                    console.log("Replace with template block")
+                }
             }
         }}>
             <Toolbar>
@@ -47,36 +65,16 @@ export const RichTextEditor: React.FC = () => {
                 <BlockButton format="bulleted-list" icon="ic:baseline-format-list-bulleted" />
                 <BlockButton format="numbered-list" icon="ic:baseline-format-list-numbered" />
             </Toolbar>
-            <Editable
-                renderElement={renderElement}
-                renderLeaf={renderLeaf}
-                placeholder="Enter some text..."
-                spellCheck
-                autoFocus
-                onKeyDown={e => {
-                    for (const hotkey in HOTKEYS) {
-                        if (isHotkey(hotkey, e as any)) {
-                            e.preventDefault()
-                            const mark = HOTKEYS[hotkey]
-                            toggleMark(editor, mark)
-                        }
-                    }
-                    for (const hotkey in BLOCK_HOTKEYS) {
-                        if (isHotkey(hotkey, e as any)) {
-                            e.preventDefault()
-                            const block = BLOCK_HOTKEYS[hotkey]
-                            toggleBlock(editor, block)
-                        }
-                    }
-                    for (const hotkey in FUNCTION_HOTKEYS) {
-                        if (isHotkey(hotkey, e as any)) {
-                            e.preventDefault()
-                            const fn = FUNCTION_HOTKEYS[hotkey]
-                            fn(editor)
-                        }
-                    }
-                }}
-            />
+            <div className="editor">
+                <Editable
+                    renderElement={renderElement}
+                    renderLeaf={renderLeaf}
+                    placeholder="Enter some text..."
+                    spellCheck
+                    autoFocus
+                    onKeyDown={e => hotkeyHandler(e, editor)}
+                />
+            </div>
         </Slate>
     )
 }
