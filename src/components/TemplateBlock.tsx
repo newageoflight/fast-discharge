@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Editor, Transforms } from 'slate';
 import { RenderElementProps, useFocused, useSelected } from 'slate-react'
 import CreatableSelect from 'react-select/creatable'
+import { InlineIcon } from '@iconify/react-with-api';
 
 interface TemplateBlockProps {
-    name: string;
+    name?: string;
     opts?: string[];
     defaultValue?: string;
 }
@@ -14,6 +15,10 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
     const focused = useFocused();
     const [chosenValue, setChosenValue] = useState<{label:string, value:string}>();
     const [options, setOptions] = useState(element.opts ? (element.opts as string[]).map(createOption) : [])
+    // todo: add the ability to name each template block
+    // clicking a button should take you to an input element where you can set it
+    const [name, setName] = useState<string>(element.name as string);
+    const [editName, setEditName] = useState(false);
 
     const handleChange = (newValue: any, actionMeta: any) => {
         setChosenValue(newValue);
@@ -27,6 +32,7 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
 
     return (
         <span {...attributes}
+            className="template-block"
             contentEditable={false}
             style={{
                 padding: '3px 3px 2px',
@@ -49,7 +55,16 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
                     </>
                 ))
             } */}
-            <CreatableSelect placeholder={element.name as string} onChange={handleChange} onCreateOption={handleCreate} value={chosenValue} options={options} />
+            {/* todo: make sure that the divs and the button display on one line */}
+            {editName ?
+            (
+                <div className="content">
+                    <label>Name this input: </label>
+                    <input type="text" />
+                </div>
+            )
+            : (<CreatableSelect placeholder={name} onChange={handleChange} onCreateOption={handleCreate} value={chosenValue} options={options} />)}
+            <button className="name-setter" onClick={() => setEditName(!editName)} style={{display: "inline-block", border: "none", outline: "none"}}><InlineIcon icon="bi:gear-fill" /></button>
             {children}
         </span>
     )

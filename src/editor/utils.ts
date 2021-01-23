@@ -1,23 +1,5 @@
 import { Editor, Transforms, Element as SlateElement, Node, NodeEntry, Path } from 'slate';
-import { LIST_TYPES, HOTKEYS, BLOCK_HOTKEYS } from './EditorConsts';
-import { isHotkey } from 'is-hotkey';
-
-export const hotkeyHandler = (event: any, editor: Editor) => {
-    for (const hotkey in HOTKEYS) {
-        if (isHotkey(hotkey, event)) {
-            event.preventDefault()
-            const mark = HOTKEYS[hotkey]
-            toggleMark(editor, mark)
-        }
-    }
-    for (const hotkey in BLOCK_HOTKEYS) {
-        if (isHotkey(hotkey, event)) {
-            event.preventDefault()
-            const block = BLOCK_HOTKEYS[hotkey]
-            toggleBlock(editor, block)
-        }
-    }
-}
+import { LIST_TYPES } from './consts';
 
 export const toggleBlock = (editor: Editor, format: string) => {
     const isActive = isBlockActive(editor, format);
@@ -61,12 +43,14 @@ export const isMarkActive = (editor: Editor, format: string) => {
     return marks ? marks[format] === true : false
 }
 
+// TODO: fix indenting and dedenting
 export const indentListItem = (editor: Editor): void => {
     let pathToCurrentItem = editor.selection!
     let currentPointPosition = pathToCurrentItem.focus
-    let listItemPath = currentPointPosition.path.slice(0, currentPointPosition.path.length - 2)
+    let listItemPath = currentPointPosition.path.slice(0, currentPointPosition.path.length - 1)
 
     let previousSiblingNodeEntry = Editor.previous(editor, {at: listItemPath}) as NodeEntry;
+    console.log(previousSiblingNodeEntry)
     if (!!previousSiblingNodeEntry) {
         let [previousSiblingNode, previousSiblingPath] = previousSiblingNodeEntry;
 
@@ -82,20 +66,29 @@ export const indentListItem = (editor: Editor): void => {
 
         if (!hasListChildren) {
             let [parentNode] = Editor.node(editor, listItemPath.slice(0, listItemPath.length-1))
-            let parentType = parentNode.type;
+            let {type: parentType} = parentNode;
+            console.log(listItemPath)
+            console.log(previousSiblingPath.concat([childrenCount]))
             Transforms.wrapNodes(editor, {type: parentType, children: []} as SlateElement, {at: listItemPath})
-            Editor.withoutNormalizing(editor, () => Transforms.moveNodes(editor, {
-                at: listItemPath,
-                to: previousSiblingPath.concat([childrenCount])
-            }))
+            // for some bizarre reason, using insert works, but move doesn't
+            let [wrappedNode] = Editor.node(editor, listItemPath)
+            Editor.withoutNormalizing(editor, () => Transforms.insertNodes(editor, wrappedNode,
+                {at: previousSiblingPath.concat([childrenCount])}))
+            // Editor.withoutNormalizing(editor, () => Transforms.moveNodes(editor, {
+            //     at: listItemPath,
+            //     to: previousSiblingPath.concat([childrenCount])
+            // }))
         } else {
             let absoluteChildPath = previousSiblingPath.concat(listChildPos);
             let [absoluteChildNode] = Editor.node(editor, absoluteChildPath) as NodeEntry;
             let absoluteNodeChildren = absoluteChildNode.children as Node[];
-            Editor.withoutNormalizing(editor, () => Transforms.moveNodes(editor, {
-                at: listItemPath,
-                to: absoluteChildPath.concat([absoluteNodeChildren.length])
-            }))
+            // for some bizarre reason, using insert works, but move doesn't
+            let [wrappedNode] = Editor.node(editor, listItemPath)
+            Transforms.insertNodes(editor, wrappedNode, {at: absoluteChildPath.concat([absoluteNodeChildren.length])})
+            // Editor.withoutNormalizing(editor, () => Transforms.moveNodes(editor, {
+            //     at: listItemPath,
+            //     to: absoluteChildPath.concat([absoluteNodeChildren.length])
+            // }))
         }
     }
 }
@@ -103,7 +96,7 @@ export const indentListItem = (editor: Editor): void => {
 export const dedentListItem = (editor: Editor): void => {
     let pathToCurrentItem = editor.selection!
     let currentPointPosition = pathToCurrentItem.focus
-    let listItemPath = currentPointPosition.path.slice(0, currentPointPosition.path.length - 2)
+    let listItemPath = currentPointPosition.path.slice(0, currentPointPosition.path.length - 1)
     
     if (listItemPath.length > 2) {
         let [originalParentNode] = Editor.node(editor, listItemPath.slice(0, listItemPath.length-1)) as NodeEntry;
@@ -115,11 +108,16 @@ export const dedentListItem = (editor: Editor): void => {
             origin = listItemPath.slice(0, listItemPath.length - 1)
         }
         
-        let destination = listItemPath.slice(0, listItemPath.length - 2)
-        destination[destination.length-1]++
-        Editor.withoutNormalizing(editor, () => Transforms.moveNodes(editor, {
-            at: origin,
-            to: destination
-        }))
+        let destination = listItemPath.slice(0, listItemPath.length - 1)
+        // destination[destination.length-1]++
+        // console.log(origin, destination)
+        // Editor.withoutNormalizing(editor, () => Transforms.moveNodes(editor, {
+        //     at: origin,
+        //     to: destination
+        // }))
+        // bizarrely, move isn't working here either so here's the fix i came up with
+        let [originNode] = Editor.node(editor, origin)
+        Transforms.insertNodes(editor, originNode, {at: destination})
+        Transforms.removeNodes(editor, {at: destination})
     }
 }

@@ -3,7 +3,8 @@ import { Editable, withReact, Slate } from "slate-react";
 import { createEditor, Editor, Location, Node, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
 
-import { hotkeyHandler } from './../utils/EditorUtils';
+import { hotkeyHandler } from '../editor/handlers'
+import { indentListItem, dedentListItem } from '../editor/utils';
 import { withVoids } from './../wraps/VoidBlocks';
 import { insertTemplateBlock } from "./TemplateBlock";
 
@@ -12,6 +13,7 @@ import { Leaf } from './Leaf';
 import { MarkButton } from "./MarkButton";
 import { BlockButton } from "./BlockButton";
 import { Toolbar } from './Toolbar'
+import { FunctionButton } from "./FunctionButton";
 
 // TODO: add an onChange handler to the editor that will replace any detected {{ elements with a template maker dropdown
 // the template maker dropdown should just be an editable void that has the ability to take a name input and add some options
@@ -30,7 +32,7 @@ export const RichTextEditor: React.FC = () => {
     useEffect(() => {
         if (!!target && insertTemplate) {
             Transforms.select(editor, target!);
-            insertTemplateBlock(editor, {name: "test"})
+            insertTemplateBlock(editor, {})
             setInsertTemplate(false);
             setTarget(null);
         }
@@ -38,6 +40,7 @@ export const RichTextEditor: React.FC = () => {
     
     return (
         <Slate editor={editor} value={value} onChange={value => {
+            console.log(editor.children)
             setValue(value);
 
             const { selection } = editor;
@@ -56,15 +59,18 @@ export const RichTextEditor: React.FC = () => {
             }
         }}>
             <Toolbar>
-                <MarkButton format="bold" icon="gridicons:bold" />
-                <MarkButton format="italic" icon="gridicons:italic" />
-                <MarkButton format="underline" icon="gridicons:underline" />
-                <BlockButton format="heading-one" icon="gridicons:heading-h1" />
-                <BlockButton format="heading-two" icon="gridicons:heading-h2" />
-                <BlockButton format="heading-three" icon="gridicons:heading-h3" />
-                <BlockButton format="heading-four" icon="gridicons:heading-h4" />
-                <BlockButton format="bulleted-list" icon="ic:baseline-format-list-bulleted" />
-                <BlockButton format="numbered-list" icon="ic:baseline-format-list-numbered" />
+                <MarkButton format="bold" icon="gridicons:bold" alt="Bold (Ctrl+B)" />
+                <MarkButton format="italic" icon="gridicons:italic" alt="Italic (Ctrl+I)" />
+                <MarkButton format="underline" icon="gridicons:underline" alt="Underline (Ctrl+U)" />
+                <BlockButton format="heading-one" icon="gridicons:heading-h1" alt="Heading 1 (Ctrl+Alt+1)" />
+                <BlockButton format="heading-two" icon="gridicons:heading-h2" alt="Heading 2 (Ctrl+Alt+2)" />
+                <BlockButton format="heading-three" icon="gridicons:heading-h3" alt="Heading 3 (Ctrl+Alt+3)" />
+                <BlockButton format="heading-four" icon="gridicons:heading-h4" alt="Heading 4 (Ctrl+Alt+4)" />
+                <BlockButton format="bulleted-list" icon="ic:baseline-format-list-bulleted" alt="Bulleted list (Ctrl+.)" />
+                <BlockButton format="numbered-list" icon="ic:baseline-format-list-numbered" alt="Numbered list (Ctrl+/)" />
+                <FunctionButton fn={indentListItem} icon="bx:bx-right-indent" alt="Indent list item (Ctrl+])" />
+                <FunctionButton fn={dedentListItem} icon="bx:bx-left-indent" alt="Dedent list item (Ctrl+[)" />
+                <FunctionButton fn={(editor: Editor) => insertTemplateBlock(editor, {})} icon="uil:brackets-curly" alt="Insert a template block (type in {{)" />
             </Toolbar>
             <div className="editor">
                 <Editable
