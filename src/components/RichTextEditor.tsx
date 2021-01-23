@@ -40,7 +40,6 @@ export const RichTextEditor: React.FC = () => {
     
     return (
         <Slate editor={editor} value={value} onChange={value => {
-            console.log(editor.children)
             setValue(value);
 
             const { selection } = editor;

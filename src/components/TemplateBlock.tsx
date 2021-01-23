@@ -1,70 +1,73 @@
-import React, { useState } from 'react'
-import { Editor, Transforms } from 'slate';
-import { RenderElementProps, useFocused, useSelected } from 'slate-react'
+import React, { useEffect, useState } from 'react'
+import { Editor, Element as SlateElement, Transforms } from 'slate';
+import { RenderElementProps, ReactEditor, useFocused, useSelected, useSlate } from 'slate-react'
 import CreatableSelect from 'react-select/creatable'
 import { InlineIcon } from '@iconify/react-with-api';
 
 interface TemplateBlockProps {
     name?: string;
-    opts?: string[];
-    defaultValue?: string;
+    opts?: {label:string, value:string}[];
+    defaultValue?: {label:string,value:string};
 }
 
+// TODO: save the state of template blocks to the editor, otherwise Slate will just forget
 export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, children, element }) => {
     const selected = useSelected();
     const focused = useFocused();
+    const editor = useSlate();
+
     const [chosenValue, setChosenValue] = useState<{label:string, value:string}>();
-    const [options, setOptions] = useState(element.opts ? (element.opts as string[]).map(createOption) : [])
-    // todo: add the ability to name each template block
-    // clicking a button should take you to an input element where you can set it
+    element.defaultValue && setChosenValue(element.defaultValue as {label:string,value:string});
+    const [options, setOptions] = useState<{label:string,value:string}[]>(element.opts ? element.opts as {label:string, value:string}[] : [])
     const [name, setName] = useState<string>(element.name as string);
     const [editName, setEditName] = useState(false);
+    const [triggerChange, setTriggerChange] = useState(false);
 
     const handleChange = (newValue: any, actionMeta: any) => {
         setChosenValue(newValue);
+        setTriggerChange(true);
     }
     
     const handleCreate = (inputValue: any) => {
         const newOption = createOption(inputValue);
         setOptions([...options, newOption])
         setChosenValue(newOption);
+        setTriggerChange(true);
     }
+    
+    useEffect(() => {
+        if (triggerChange) {
+            console.log(editor.children)
+            let path = ReactEditor.findPath(editor, element)
+            console.log(path)
+            let newProps: Partial<SlateElement> = {
+                name,
+                opts: options,
+                defaultValue: chosenValue
+            }
+            console.log(newProps)
+            Transforms.setNodes(editor, newProps, {at: path})
+        }
+        setTriggerChange(false);
+    }, [triggerChange])
 
     return (
         <span {...attributes}
             className="template-block"
             contentEditable={false}
             style={{
-                padding: '3px 3px 2px',
-                margin: '0 1px',
-                verticalAlign: 'baseline',
-                display: 'inline-block',
-                borderRadius: '4px',
-                backgroundColor: '#eee',
-                fontSize: '0.9em',
                 boxShadow: selected && focused ? '0 0 0 2px #b4d5ff' : 'none',
-                minWidth: '7rem',
             }}>
-            {/* {(focused) ? 
-            <CreatableSelect onChange={handleChange} options={element.opts ? (element.opts as string[]).map(createOption) : []} />
-                : (chosenValue ? (<>{chosenValue}</>) : (
-                    <>
-                        {"{{ "}
-                        {element.name as string}
-                        {" }}"}
-                    </>
-                ))
-            } */}
-            {/* todo: make sure that the divs and the button display on one line */}
             {editName ?
             (
                 <div className="content">
-                    <label>Name this input: </label>
-                    <input type="text" />
+                    <input type="text" placeholder="Name this field..." value={name} onInput={e => setName((e.target as HTMLInputElement).value)} />
                 </div>
             )
-            : (<CreatableSelect placeholder={name} onChange={handleChange} onCreateOption={handleCreate} value={chosenValue} options={options} />)}
-            <button className="name-setter" onClick={() => setEditName(!editName)} style={{display: "inline-block", border: "none", outline: "none"}}><InlineIcon icon="bi:gear-fill" /></button>
+            : (<CreatableSelect styles={customSelectStyles} placeholder={name} onChange={handleChange} onCreateOption={handleCreate} value={chosenValue} options={options} />)}
+            <button className="name-setter" onClick={() => {
+                setEditName(!editName)
+            }}><InlineIcon icon="bi:gear-fill" /></button>
             {children}
         </span>
     )
@@ -84,3 +87,9 @@ const createOption = (label: string) => ({
     label,
     value: label.toLowerCase().replace(/\W/g, '_')
 })
+
+const customSelectStyles = {
+    container: (provided: any, state: any) => {
+        return {...provided}
+    }
+}

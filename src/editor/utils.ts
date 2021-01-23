@@ -121,3 +121,8 @@ export const dedentListItem = (editor: Editor): void => {
         Transforms.removeNodes(editor, {at: destination})
     }
 }
+
+export const nextTemplateBlock = (editor: Editor) => {
+    let [currentNode] = Editor.node(editor, editor.selection!)
+    console.log(currentNode)
+}

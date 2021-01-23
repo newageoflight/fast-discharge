@@ -12,6 +12,10 @@ export const serialiseMarkdown = (node: any) => {
             return `# ${children}`
         case "heading-two":
             return `## ${children}`
+        case "heading-three":
+            return `### ${children}`
+        case "heading-four":
+            return `#### ${children}`
         default:
             return children
     }
