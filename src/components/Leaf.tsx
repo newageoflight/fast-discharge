@@ -14,5 +14,8 @@ export const Leaf: React.FC<RenderLeafProps> = ({ attributes, children, leaf }) 
     if (leaf.underline)
         children = <u>{children}</u>
         
+    if (leaf.pretemplate)
+        children = <span style={{borderRadius: "5px", backgroundColor: "#ddd"}}>{children}</span>
+        
     return <span {...attributes}>{children}</span>
 }

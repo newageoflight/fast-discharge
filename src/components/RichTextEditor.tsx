@@ -1,7 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
-import { Editable, withReact, Slate, ReactEditor } from "slate-react";
-import { createEditor, Editor, Node, Range, Transforms } from "slate";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Editable, withReact, Slate } from "slate-react";
+import { createEditor, Editor, Location, Node, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
+
+import { hotkeyHandler } from './../utils/EditorUtils';
+import { withVoids } from './../wraps/VoidBlocks';
+import { insertTemplateBlock } from "./TemplateBlock";
 
 import { Element } from './Element';
 import { Leaf } from './Leaf';
@@ -9,8 +13,6 @@ import { MarkButton } from "./MarkButton";
 import { BlockButton } from "./BlockButton";
 import { Toolbar } from './Toolbar'
 
-import { hotkeyHandler } from './../utils/EditorUtils';
-import { withVoids } from './../wraps/VoidBlocks';
 // TODO: add an onChange handler to the editor that will replace any detected {{ elements with a template maker dropdown
 // the template maker dropdown should just be an editable void that has the ability to take a name input and add some options
 // TODO: add the ability to import and save templates as MD files
@@ -18,24 +20,22 @@ import { withVoids } from './../wraps/VoidBlocks';
 
 export const RichTextEditor: React.FC = () => {
     const [value, setValue] = useState<Node[]>(InitialState);
-    const [target, setTarget] = useState<Range | undefined | null>();
-    const ref = useRef<HTMLDivElement | null>();
+    const [target, setTarget] = useState<Location | null>();
+    const [insertTemplate, setInsertTemplate] = useState(false);
     const renderElement = useCallback(props => <Element {...props} />, [])
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
     const editor = useMemo(() => withHistory(withReact(withVoids(createEditor()))), [])
     
+    // useEffect hook for inserting template tags
     useEffect(() => {
-        // all this does is decide where to insert the new div
-        if (target) {
-            const el = ref.current;
-            const domRange = ReactEditor.toDOMRange(editor, target);
-            const rect = domRange.getBoundingClientRect();
-            el!.style.top = `${rect.top + window.pageYOffset + 24}px`
-            el!.style.left = `${rect.left + window.pageXOffset}px`
+        if (!!target && insertTemplate) {
+            Transforms.select(editor, target!);
+            insertTemplateBlock(editor, {name: "test"})
+            setInsertTemplate(false);
+            setTarget(null);
         }
-        // eslint-disable-next-line
     }, [target])
-
+    
     return (
         <Slate editor={editor} value={value} onChange={value => {
             setValue(value);
@@ -50,7 +50,8 @@ export const RichTextEditor: React.FC = () => {
                 const beforeText = beforeRange && Editor.string(editor, beforeRange)
                 const beforeMatch = beforeText && beforeText.match(/\{\{/);
                 if (beforeMatch) {
-                    console.log("Replace with template block")
+                    setInsertTemplate(true);
+                    setTarget(beforeRange as Location);
                 }
             }
         }}>

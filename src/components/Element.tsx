@@ -1,5 +1,6 @@
 import React from 'react'
 import { RenderElementProps } from "slate-react";
+import { TemplateBlock } from './TemplateBlock';
 
 export const Element: React.FC<RenderElementProps> = ({ attributes, children, element }) => {
     switch (element.type) {
@@ -17,6 +18,8 @@ export const Element: React.FC<RenderElementProps> = ({ attributes, children, el
             return <h4 {...attributes}>{children}</h4>
         case 'list-item':
             return <li {...attributes}>{children}</li>
+        case 'template-block':
+            return <TemplateBlock attributes={attributes} children={children} element={element} />
         default:
             return <p {...attributes}>{children}</p>
     }

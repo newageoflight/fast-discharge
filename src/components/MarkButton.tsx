@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, InlineIcon } from "@iconify/react-with-api";
+import { InlineIcon } from "@iconify/react-with-api";
 import { useSlate } from 'slate-react';
 import { isMarkActive, toggleMark } from './../utils/EditorUtils';
 
