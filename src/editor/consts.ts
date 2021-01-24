@@ -1,6 +1,5 @@
 import { Editor } from 'slate';
-import { nextTemplateBlock } from './utils';
-import { indentListItem, dedentListItem } from './lists'
+import { findNextTemplate, findPreviousTemplate } from './templates';
 
 export const HOTKEYS: Record<string, string> = {
     'mod+b': 'bold',
@@ -18,10 +17,9 @@ export const BLOCK_HOTKEYS: Record<string, string> = {
     'mod+/': 'numbered-list',
 }
 
-// export const FUNCTION_HOTKEYS: Record<string, (editor: Editor) => void> = {
-//     'mod+]': indentListItem,
-//     'mod+[': dedentListItem,
-//     'tab': nextTemplateBlock,
-// }
+export const FUNCTION_HOTKEYS: Record<string, (editor: Editor) => void> = {
+    'mod+]': findNextTemplate,
+    'mod+[': findPreviousTemplate,
+}
 
 export const LIST_TYPES: string[] = ['numbered-list', 'bulleted-list']

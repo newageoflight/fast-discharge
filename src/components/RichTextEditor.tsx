@@ -2,10 +2,9 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Editable, withReact, Slate } from "slate-react";
 import { createEditor, Editor, Location, Node, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
-import { EditListPlugin } from "@productboard/slate-edit-list"
 
+import { withEditList, onKeyDown as listKeyDown, indentListItem, dedentListItem } from "./../editor/lists"
 import { hotkeyHandler } from '../editor/handlers'
-import { indentListItem, dedentListItem } from '../editor/lists';
 import { withVoids } from './../wraps/VoidBlocks';
 import { insertTemplateBlock } from "./TemplateBlock";
 import { InitialState } from "./../context/InitialState";
@@ -14,8 +13,10 @@ import { Element } from './Element';
 import { Leaf } from './Leaf';
 import { MarkButton } from "./MarkButton";
 import { BlockButton } from "./BlockButton";
+import { ListButton } from "./ListButton";
 import { Toolbar } from './Toolbar'
 import { FunctionButton } from "./FunctionButton";
+import { toClipboardMD } from "../editor/seralise";
 
 // TODO: add an onChange handler to the editor that will replace any detected {{ elements with a template maker dropdown
 // the template maker dropdown should just be an editable void that has the ability to take a name input and add some options
@@ -28,11 +29,6 @@ export const RichTextEditor: React.FC = () => {
     const [insertTemplate, setInsertTemplate] = useState(false);
     const renderElement = useCallback(props => <Element {...props} />, [])
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
-    const editListOptions = {
-        types: ["bulleted-list", "numbered-list"],
-        typeItem: ["list-item"],
-    }
-    const [withEditList, onKeyDown, { Editor, Element: SlateElement, Transforms }] = EditListPlugin(editListOptions);
 
     const editor = useMemo(() => withHistory(withEditList(withReact(withVoids(createEditor())))), [])
     
@@ -48,10 +44,11 @@ export const RichTextEditor: React.FC = () => {
     
     return (
         <Slate editor={editor} value={value} onChange={value => {
+            setValue(value);
+            console.log(value)
+
             // you should be able to replace this code block with this addon:
             // https://github.com/ianstormtaylor/slate-plugins/tree/master/packages/slate-auto-replace
-            setValue(value);
-
             const { selection } = editor;
             // if nothing is currently selected under the cursor
             if (selection && Range.isCollapsed(selection)) {
@@ -75,11 +72,12 @@ export const RichTextEditor: React.FC = () => {
                 <BlockButton format="heading-two" icon="gridicons:heading-h2" alt="Heading 2 (Ctrl+Alt+2)" />
                 <BlockButton format="heading-three" icon="gridicons:heading-h3" alt="Heading 3 (Ctrl+Alt+3)" />
                 <BlockButton format="heading-four" icon="gridicons:heading-h4" alt="Heading 4 (Ctrl+Alt+4)" />
-                <BlockButton format="bulleted-list" icon="ic:baseline-format-list-bulleted" alt="Bulleted list (Ctrl+.)" />
-                <BlockButton format="numbered-list" icon="ic:baseline-format-list-numbered" alt="Numbered list (Ctrl+/)" />
-                {/* <FunctionButton fn={indentListItem} icon="bx:bx-right-indent" alt="Indent list item (Ctrl+])" />
+                <ListButton format="bulleted-list" icon="ic:baseline-format-list-bulleted" alt="Bulleted list (Ctrl+.)" />
+                <ListButton format="numbered-list" icon="ic:baseline-format-list-numbered" alt="Numbered list (Ctrl+/)" />
+                <FunctionButton fn={indentListItem} icon="bx:bx-right-indent" alt="Indent list item (Ctrl+])" />
                 <FunctionButton fn={dedentListItem} icon="bx:bx-left-indent" alt="Dedent list item (Ctrl+[)" />
-                <FunctionButton fn={(editor: Editor) => insertTemplateBlock(editor, {})} icon="uil:brackets-curly" alt="Insert a template block (type in {{)" /> */}
+                <FunctionButton fn={(editor: Editor) => insertTemplateBlock(editor, {})} icon="uil:brackets-curly" alt="Insert a template block (type in {{)" />
+                <FunctionButton fn={toClipboardMD} icon="bi:markdown" alt="Copy to clipboard as Markdown" />
             </Toolbar>
             <div className="editor">
                 <Editable
@@ -88,8 +86,10 @@ export const RichTextEditor: React.FC = () => {
                     placeholder="Enter some text..."
                     spellCheck
                     autoFocus
-                    // onKeyDown={e => hotkeyHandler(e, editor)}
-                    onKeyDown={onKeyDown(editor)}
+                    onKeyDown={e => {
+                        listKeyDown(editor)(e)
+                        hotkeyHandler(e, editor)
+                    }}
                 />
             </div>
         </Slate>

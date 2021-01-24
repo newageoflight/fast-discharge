@@ -42,8 +42,3 @@ export const isMarkActive = (editor: Editor, format: string) => {
     const marks = Editor.marks(editor);
     return marks ? marks[format] === true : false
 }
-
-export const nextTemplateBlock = (editor: Editor) => {
-    let [currentNode] = Editor.node(editor, editor.selection!)
-    console.log(currentNode)
-}
