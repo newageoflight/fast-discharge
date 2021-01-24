@@ -18,10 +18,10 @@ export const BLOCK_HOTKEYS: Record<string, string> = {
     'mod+/': 'numbered-list',
 }
 
-export const FUNCTION_HOTKEYS: Record<string, (editor: Editor) => void> = {
-    'mod+]': indentListItem,
-    'mod+[': dedentListItem,
-    'tab': nextTemplateBlock,
-}
+// export const FUNCTION_HOTKEYS: Record<string, (editor: Editor) => void> = {
+//     'mod+]': indentListItem,
+//     'mod+[': dedentListItem,
+//     'tab': nextTemplateBlock,
+// }
 
 export const LIST_TYPES: string[] = ['numbered-list', 'bulleted-list']

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Editable, withReact, Slate } from "slate-react";
 import { createEditor, Editor, Location, Node, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
+import { EditListPlugin } from "@productboard/slate-edit-list"
 
 import { hotkeyHandler } from '../editor/handlers'
 import { indentListItem, dedentListItem } from '../editor/lists';
@@ -27,7 +28,13 @@ export const RichTextEditor: React.FC = () => {
     const [insertTemplate, setInsertTemplate] = useState(false);
     const renderElement = useCallback(props => <Element {...props} />, [])
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
-    const editor = useMemo(() => withHistory(withReact(withVoids(createEditor()))), [])
+    const editListOptions = {
+        types: ["bulleted-list", "numbered-list"],
+        typeItem: ["list-item"],
+    }
+    const [withEditList, onKeyDown, { Editor, Element: SlateElement, Transforms }] = EditListPlugin(editListOptions);
+
+    const editor = useMemo(() => withHistory(withEditList(withReact(withVoids(createEditor())))), [])
     
     // useEffect hook for inserting template tags
     useEffect(() => {
@@ -70,9 +77,9 @@ export const RichTextEditor: React.FC = () => {
                 <BlockButton format="heading-four" icon="gridicons:heading-h4" alt="Heading 4 (Ctrl+Alt+4)" />
                 <BlockButton format="bulleted-list" icon="ic:baseline-format-list-bulleted" alt="Bulleted list (Ctrl+.)" />
                 <BlockButton format="numbered-list" icon="ic:baseline-format-list-numbered" alt="Numbered list (Ctrl+/)" />
-                <FunctionButton fn={indentListItem} icon="bx:bx-right-indent" alt="Indent list item (Ctrl+])" />
+                {/* <FunctionButton fn={indentListItem} icon="bx:bx-right-indent" alt="Indent list item (Ctrl+])" />
                 <FunctionButton fn={dedentListItem} icon="bx:bx-left-indent" alt="Dedent list item (Ctrl+[)" />
-                <FunctionButton fn={(editor: Editor) => insertTemplateBlock(editor, {})} icon="uil:brackets-curly" alt="Insert a template block (type in {{)" />
+                <FunctionButton fn={(editor: Editor) => insertTemplateBlock(editor, {})} icon="uil:brackets-curly" alt="Insert a template block (type in {{)" /> */}
             </Toolbar>
             <div className="editor">
                 <Editable
@@ -81,7 +88,8 @@ export const RichTextEditor: React.FC = () => {
                     placeholder="Enter some text..."
                     spellCheck
                     autoFocus
-                    onKeyDown={e => hotkeyHandler(e, editor)}
+                    // onKeyDown={e => hotkeyHandler(e, editor)}
+                    onKeyDown={onKeyDown(editor)}
                 />
             </div>
         </Slate>
