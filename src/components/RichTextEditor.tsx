@@ -4,9 +4,10 @@ import { createEditor, Editor, Location, Node, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
 
 import { hotkeyHandler } from '../editor/handlers'
-import { indentListItem, dedentListItem } from '../editor/utils';
+import { indentListItem, dedentListItem } from '../editor/lists';
 import { withVoids } from './../wraps/VoidBlocks';
 import { insertTemplateBlock } from "./TemplateBlock";
+import { InitialState } from "./../context/InitialState";
 
 import { Element } from './Element';
 import { Leaf } from './Leaf';
@@ -40,6 +41,8 @@ export const RichTextEditor: React.FC = () => {
     
     return (
         <Slate editor={editor} value={value} onChange={value => {
+            // you should be able to replace this code block with this addon:
+            // https://github.com/ianstormtaylor/slate-plugins/tree/master/packages/slate-auto-replace
             setValue(value);
 
             const { selection } = editor;
@@ -84,10 +87,3 @@ export const RichTextEditor: React.FC = () => {
         </Slate>
     )
 }
-
-const InitialState = [
-    {
-        type: "paragraph",
-        children: [{text: ""}]
-    },
-]

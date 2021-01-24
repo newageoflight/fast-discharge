@@ -1,5 +1,6 @@
 import { Editor } from 'slate';
-import { indentListItem, dedentListItem, nextTemplateBlock } from './utils';
+import { nextTemplateBlock } from './utils';
+import { indentListItem, dedentListItem } from './lists'
 
 export const HOTKEYS: Record<string, string> = {
     'mod+b': 'bold',
