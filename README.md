@@ -7,4 +7,4 @@ Features on the roadmap:
 - [ ] Ability to export rich text and plain text (as Markdown).
 
 Long term goals that won't be implemented unless hospitals pay me for it:
-- [ ] Direct eMR integration
+- [ ] Direct eMR integration/using API calls to set values for template fields
