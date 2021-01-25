@@ -3,6 +3,7 @@ import "./css/App.css"
 import logo from "./running.png"
 
 import { RichTextEditor } from './components/RichTextEditor';
+// fastDischarge should also be able to expose API endpoints where it receives parameters for certain values in a template
 
 function App() {
   return (

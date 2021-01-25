@@ -1,4 +1,4 @@
-import { Editor } from 'slate';
+import { Editor, Location } from 'slate';
 import { findNextTemplate, findPreviousTemplate } from './templates';
 
 export const HOTKEYS: Record<string, string> = {
@@ -7,7 +7,6 @@ export const HOTKEYS: Record<string, string> = {
     'mod+u': 'underline',
 }
 
-// TODO: add a shortcut for indenting and dedenting list items
 export const BLOCK_HOTKEYS: Record<string, string> = {
     'mod+alt+1': 'heading-one',
     'mod+alt+2': 'heading-two',
@@ -15,6 +14,11 @@ export const BLOCK_HOTKEYS: Record<string, string> = {
     'mod+alt+4': 'heading-four',
     'mod+.': 'bulleted-list',
     'mod+/': 'numbered-list',
+}
+
+export const TEMPLATE_NAV_HOTKEYS: Record<string, (editor: Editor, at?: Location) => void> = {
+    'mod+]': findNextTemplate,
+    'mod+[': findPreviousTemplate,
 }
 
 export const FUNCTION_HOTKEYS: Record<string, (editor: Editor) => void> = {
