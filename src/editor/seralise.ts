@@ -6,6 +6,7 @@ import { Transforms } from 'slate';
 
 // TODO: fix this, lists and template blocks still don't work
 // lmao when was the last time anything just plugged in and worked in software development???
+// the better thing to do might just be to preprocess the nodes and then put them into a format that slateToRemark will understand
 export const toMarkdown = (editor: Editor): string => {
     const processor = unified().use(slateToRemark).use(stringify);
     // preprocess the value first to replace any templateblocks with their defaultvalue
