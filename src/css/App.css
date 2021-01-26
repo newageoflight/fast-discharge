@@ -85,8 +85,14 @@
 .template-block > button.name-setter {
   display: inline-block;
   border: none;
+  border-radius: 5px;
   outline: none;
   -webkit-transition: 0.3s ease all;
   transition: 0.3s ease all;
+}
+
+.template-block > button.name-setter:focus {
+  -webkit-box-shadow: 0 0 0 2px #b4d5ff;
+          box-shadow: 0 0 0 2px #b4d5ff;
 }
 /*# sourceMappingURL=App.css.map */

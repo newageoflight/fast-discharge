@@ -5,8 +5,8 @@ import CreatableSelect from 'react-select/creatable'
 import { InlineIcon } from '@iconify/react-with-api';
 import { ValueType } from 'react-select';
 import AutoSizeInput from "react-input-autosize";
-import { isHotkey } from 'is-hotkey';
 import { TEMPLATE_NAV_HOTKEYS } from '../editor/consts';
+import { isHotkey } from 'is-hotkey';
 
 interface TemplateBlockProps {
     name?: string;
@@ -29,7 +29,7 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
     // probably shouldn't be using "any" as the type here but idk what else to do lol
     const selectRef = useRef<any>(null);
     const editorSelection = useRef<any>(editor.selection);
-    const [selectActive, setSelectActive] = useState(false);
+    // const [selectActive, setSelectActive] = useState(false);
 
     const handleChange = useCallback((newValue: any, actionMeta: any) => {
         setChosenValue(newValue);
@@ -58,28 +58,43 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
     }, [])
     
     // somewhat unsafe but it works
-    useEffect(() => {
-        if (focused && selected && !!selectRef) {
-            editorSelection.current = editor.selection
-            selectRef!.current!.focus()
-            setSelectActive(true);
-        }
-    }, [focused, selected])
+    // useEffect(() => {
+    //     if (focused && selected && !!selectRef) {
+    //         editorSelection.current = editor.selection
+    //         selectRef!.current!.focus()
+    //         // setSelectActive(true);
+    //     }
+    // }, [focused, selected])
 
     // TODO: fix navigation
-    const onKeyDown = (event: any) => {
-        if (selectActive) {
-            for (const hotkey in TEMPLATE_NAV_HOTKEYS) {
-                if (isHotkey(hotkey, event)) {
-                    event.preventDefault();
-                    const fn = TEMPLATE_NAV_HOTKEYS[hotkey];
-                    console.log(editorSelection.current)
-                    setSelectActive(false);
-                    fn(editor, editorSelection.current)
-                }
-            }
-        }
-    }
+    // const onKeyDown = (event: any) => {
+    //     for (const hotkey in TEMPLATE_NAV_HOTKEYS) {
+    //         if (isHotkey(hotkey, event)) {
+    //             event.preventDefault();
+    //             const fn = TEMPLATE_NAV_HOTKEYS[hotkey];
+    //             console.log(editorSelection.current)
+    //             fn(editor, editorSelection.current)
+    //         }
+    //     }
+    // }
+    
+
+    // const onKeyDown = (event: any) => {
+    //     console.log("keyDown event captured")
+    //     switch (event.key) {
+    //         case "Enter":
+    //             event.preventDefault();
+    //             if (focused && selected && !!selectRef && !selectActive) {
+    //                 editorSelection.current = editor.selection;
+    //                 selectRef.current.focus();
+    //                 console.log("Should focus selection box")
+    //                 setSelectActive(true);
+    //             } else if (selectActive) {
+    //                 console.log("Should refocus to editor")
+    //                 // refocus to parent
+    //             }
+    //     }
+    // }
 
     return (
         <span {...attributes}
@@ -98,8 +113,9 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
             : (<CreatableSelect 
                     ref={selectRef}
                     styles={customSelectStyles} theme={customSelectTheme}
-                    placeholder={name} onChange={handleChange} onCreateOption={handleCreate}
-                    value={chosenValue} options={options} onKeyDown={onKeyDown} />)}
+                    placeholder={name}
+                    onChange={handleChange} onCreateOption={handleCreate}
+                    value={chosenValue} options={options} />)}
             <button className="name-setter" onClick={() => {
                 setEditName(!editName)
             }}><InlineIcon icon="bi:gear-fill" /></button>
@@ -129,9 +145,9 @@ const customSelectStyles = {
         paddingTop: "1px",
     }),
     valueContainer: (provided: any, state: any) => {
-        console.log(state);
+        // console.log(state);
         let [currentOption] = state.getValue();
-        console.log(currentOption)
+        // console.log(currentOption)
         return ({
             ...provided,
             margin: "0 0 0 4px",

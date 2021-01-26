@@ -3,7 +3,7 @@ export const InitialState = [
     {
         type: "paragraph",
         children: [
-            {text: "The patient is "},
+            {text: "Type in {{ to create a template block like this (the gear icon allows you to name the field): "},
             {
                 type: "template-block",
                 name: "sex", 
@@ -12,6 +12,12 @@ export const InitialState = [
                 children: [{text: ''}],
             },
             {text: ''},
+        ]
+    },
+    {
+        type: "paragraph",
+        children: [
+            {text: "FastDischarge also comes with all the rich text editing features you know and love!"}
         ]
     },
 ]

@@ -16,15 +16,13 @@ import { BlockButton } from "./BlockButton";
 import { ListButton } from "./ListButton";
 import { Toolbar } from './Toolbar'
 import { FunctionButton } from "./FunctionButton";
-import { toClipboardMD } from "../editor/seralise";
+import { toClipboardHTML, toClipboardMD } from "../editor/seralise";
 
-// TODO: add an onChange handler to the editor that will replace any detected {{ elements with a template maker dropdown
-// the template maker dropdown should just be an editable void that has the ability to take a name input and add some options
-// TODO: add the ability to import and save templates as MD files
-// TODO: add the ability to use the tab key to navigate through templates
+// TODO: implement template uploading
+// see here: https://stackoverflow.com/questions/57007536/react-js-reading-from-a-local-file
 
 export const RichTextEditor: React.FC = () => {
-    const [value, setValue] = useState<Node[]>(InitialState);
+    const [value, setValue] = useState<Node[]>(JSON.parse((localStorage.getItem("content") as string)) || InitialState);
     const [target, setTarget] = useState<Location | null>();
     const [insertTemplate, setInsertTemplate] = useState(false);
     const renderElement = useCallback(props => <Element {...props} />, [])
@@ -42,9 +40,41 @@ export const RichTextEditor: React.FC = () => {
         }
     }, [target])
     
+    const exportTemplateAsFile = () => {
+        const blob = new Blob([JSON.stringify(editor.children)], {type: "application/json"})
+        const fileDownloadUrl = URL.createObjectURL(blob);
+        let tempLink = document.createElement("a")
+        tempLink.href = fileDownloadUrl;
+        tempLink.setAttribute("download", "template.fdt")
+        tempLink.click()
+        tempLink.remove()
+    }
+    
+    const loadTemplateFromFile = () => {
+        // see here: 
+        // https://codepen.io/rkotze/pen/zjRXYr
+        // https://stackoverflow.com/questions/57007536/react-js-reading-from-a-local-file
+        // console.log("File popup should now appear")
+        const fileSelector = document.createElement("input");
+        fileSelector.setAttribute("type", "file")
+        fileSelector.click()
+        fileSelector.addEventListener("change", event => {
+            if (fileSelector.files && fileSelector.files.length >= 1) {
+                let file = fileSelector.files![0], fr = new FileReader();
+                fr.readAsText(file)
+                fr.onload = event => {
+                    let loaded = JSON.parse((event.target!.result as string))
+                    setValue(loaded)
+                }
+            }
+        })
+    }
+    
     return (
         <Slate editor={editor} value={value} onChange={value => {
             setValue(value);
+            const content = JSON.stringify(value);
+            localStorage.setItem("content", content)
             console.log(value)
 
             // you should be able to replace this code block with this addon:
@@ -74,10 +104,13 @@ export const RichTextEditor: React.FC = () => {
                 <BlockButton format="heading-four" icon="gridicons:heading-h4" alt="Heading 4 (Ctrl+Alt+4)" />
                 <ListButton format="bulleted-list" icon="ic:baseline-format-list-bulleted" alt="Bulleted list (Ctrl+.)" />
                 <ListButton format="numbered-list" icon="ic:baseline-format-list-numbered" alt="Numbered list (Ctrl+/)" />
-                <FunctionButton fn={indentListItem} icon="bx:bx-right-indent" alt="Indent list item (Ctrl+])" />
-                <FunctionButton fn={dedentListItem} icon="bx:bx-left-indent" alt="Dedent list item (Ctrl+[)" />
+                <FunctionButton fn={indentListItem} icon="bx:bx-right-indent" alt="Indent list item (Tab)" />
+                <FunctionButton fn={dedentListItem} icon="bx:bx-left-indent" alt="Dedent list item (Shift-Tab)" />
                 <FunctionButton fn={(editor: Editor) => insertTemplateBlock(editor, {})} icon="uil:brackets-curly" alt="Insert a template block (type in {{)" />
-                <FunctionButton fn={toClipboardMD} icon="bi:markdown" alt="Copy to clipboard as Markdown" />
+                <FunctionButton fn={toClipboardMD} icon="ion:copy-outline" alt="Copy to clipboard as plain text (Markdown)" />
+                <FunctionButton fn={toClipboardHTML} icon="ion:copy" alt="Copy to clipboard as rich text" />
+                <FunctionButton fn={exportTemplateAsFile} icon="bx:bxs-download" alt="Save current template/contents as file" />
+                <FunctionButton fn={loadTemplateFromFile} icon="ic:baseline-file-upload" alt="Open a template/document from a file" />
             </Toolbar>
             <div className="editor">
                 <Editable
@@ -87,6 +120,7 @@ export const RichTextEditor: React.FC = () => {
                     spellCheck
                     autoFocus
                     onKeyDown={e => {
+                        console.log(Editor.node(editor, editor.selection))
                         listKeyDown(editor)(e)
                         hotkeyHandler(e, editor)
                     }}
