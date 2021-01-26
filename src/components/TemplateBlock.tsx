@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Editor, Transforms } from 'slate';
 import { RenderElementProps, ReactEditor, useFocused, useSelected, useEditor } from 'slate-react'
 import CreatableSelect from 'react-select/creatable'
 import { InlineIcon } from '@iconify/react-with-api';
 import { ValueType } from 'react-select';
 import AutoSizeInput from "react-input-autosize";
-import { TEMPLATE_NAV_HOTKEYS } from '../editor/consts';
-import { isHotkey } from 'is-hotkey';
 
 interface TemplateBlockProps {
     name?: string;
@@ -36,12 +34,12 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
         changeProps({defaultValue: newValue})
     }, [setChosenValue])
     
-    const handleCreate = useCallback((inputValue: any) => {
+    const handleCreate = (inputValue: any) => {
         const newOption = createOption(inputValue);
         setOptions([...options, newOption])
         setChosenValue(newOption);
         changeProps({opts: [...options, newOption], defaultValue: newOption})
-    }, [setOptions, setChosenValue])
+    }
     
     const handleNameChange = useCallback((evt: React.FormEvent) => {
         let newName = (evt.target as HTMLInputElement).value
