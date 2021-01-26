@@ -170,6 +170,7 @@ const customSelectStyles = {
     menu: (provided: any, state: any) => ({
         ...provided,
         marginTop: 0,
+        zIndex: `${state.selectProps.menuIsOpen ? 999 : "inherit"}`
     }),
     option: (provided: any) => ({
         ...provided,
