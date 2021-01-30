@@ -7,4 +7,4 @@ Currently usable but there are a few fairly major bugs with display, cosmetics, 
 
 Try it here: [http://newageoflight.github.io/fast-discharge](http://newageoflight.github.io/fast-discharge)
 
-I do plan on developing eMR integration at a later stage but it's unlikely to become a reality unless hospitals pay me for it (and sort out all the legal stuff).
+I do plan on developing eMR integration at a later stage but there are probably going to be legal headaches involved...
