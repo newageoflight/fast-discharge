@@ -95,4 +95,8 @@
   -webkit-box-shadow: 0 0 0 2px #b4d5ff;
           box-shadow: 0 0 0 2px #b4d5ff;
 }
+
+footer .disclaimer {
+  font-size: 0.8rem;
+}
 /*# sourceMappingURL=App.css.map */
