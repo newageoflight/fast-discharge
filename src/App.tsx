@@ -18,8 +18,7 @@ function App() {
         <RichTextEditor />
       </div>
       <footer>
-        <p>&copy; Christopher Chen 2021-</p>
-        <p className="disclaimer">All data is stored locally - <em>FastDischarge does not use any central servers</em> and is therefore compliant with NSW Health's Information Security standards! (look at the code if you don't believe me)</p>
+        <p>&copy; <a href="https://github.com/newageoflight">Christopher Chen</a> 2021-</p>
       </footer>
     </div>
   );

@@ -9,21 +9,15 @@ import * as clipboard from "clipboard-polyfill";
 // https://github.com/accordproject/markdown-transform/tree/master/packages/markdown-slate/
 // https://github.com/inokawa/remark-slate-transformer
 
-// const slateTransformer = new SlateTransformer();
-
 export const toMarkdown = (editor: Editor): string => {
     const preprocessed = editor.children.map(preprocessMDNode)
-    const processor = unified().use(slateToRemark).use(stringify)
+    const processor = unified().use(slateToRemark).use(stringify, {bullet: "-"})
     const ast = processor.runSync({
         type: "root",
         children: preprocessed,
     });
-    console.log(ast);
-    // const processed = original.map(preprocessMDNode)
-    // console.log(processed)
-    // console.log(slateTransformer.toCiceroMark(processed))
-    // const text = slateTransformer.toMarkdown(processed);
     const text = processor.stringify(ast);
+    // i can't figure out how to remove the unnecessary line breaks in the lists using remark's serialiser
 
     return text;
 }
