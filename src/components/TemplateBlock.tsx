@@ -130,9 +130,12 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
                     onChange={handleChange} onCreateOption={handleCreate}
                     onMenuOpen={() => setMenuOpen(true)} onMenuClose={() => setMenuOpen(false)}
                     value={chosenValue} options={options} />)}
-            <button className="name-setter" onClick={() => {
-                setEditName(!editName)
-            }}><InlineIcon icon="bi:gear-fill" /></button>
+            <button className="name-setter"
+                onClick={() => {
+                    setEditName(!editName)
+                }}
+                tabIndex={-1}
+            ><InlineIcon icon="bi:gear-fill" /></button>
             {children}
         </span>
     )

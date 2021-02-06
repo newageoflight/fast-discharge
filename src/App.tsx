@@ -34,15 +34,20 @@ function App() {
           <h2>About FastDischarge</h2>
           <button onClick={() => setModalOpen(false)}><InlineIcon icon="eva:close-fill" /></button>
         </div>
-        <p>FastDischarge aims to be an open-source medical documentation platform that is truly <em>fast</em>.</p>
-        <p>
-          With FastDischarge, you can easily create template fields and prepopulate them with commonly used values - just type in <kbd>{"{{"}</kbd> or press the <InlineIcon icon="uil:brackets-curly" /> button on the toolbar, and set some options.
-          FastDischarge lets you write your progress notes and discharge letters faster, so you can get back to being a doctor.
-        </p>
-        <p>
-          If you have experience working with Slate.js, React.js or Typescript, please consider contributing to this project on <a href="https://github.com/newageoflight/fast-discharge">Github</a>.
-        </p>
-        <p>Developed by <a href="mailto:camint3rnal@live.com">Christopher Chen</a> (JMO/Intern)</p>
+        <div className="modal-body">
+          <p>FastDischarge aims to be an open-source medical documentation platform that is truly <em>fast</em>.</p>
+          <p>
+            With FastDischarge, you can easily create template fields and prepopulate them with commonly used values - just type in <kbd>{"{{"}</kbd> or press the <InlineIcon icon="uil:brackets-curly" /> button on the toolbar, and set some options.
+            FastDischarge lets you write your progress notes and discharge letters faster, so you can get back to being a doctor.
+          </p>
+          <p>
+            If you have experience working with Slate.js, React.js or Typescript, please consider contributing to this project on <a href="https://github.com/newageoflight/fast-discharge">Github</a>.
+          </p>
+          <p>Developed by <a href="mailto:camint3rnal@live.com">Christopher Chen</a> (JMO/Intern)</p>
+        </div>
+        <div className="modal-footer">
+          
+        </div>
       </Modal>
     </div>
   );
