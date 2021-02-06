@@ -23,9 +23,11 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
     const [options, setOptions] = useState<{label:string,value:string}[]>(element.opts ? element.opts as {label:string, value:string}[] : [])
     const [name, setName] = useState<string>(element.name as string);
     const [editName, setEditName] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
     
     // probably shouldn't be using "any" as the type here but idk what else to do lol
     const selectRef = useRef<any>(null);
+    // const elementRef = useRef<HTMLSpanElement>(null);
     const editorSelection = useRef<any>(editor.selection);
     // const [selectActive, setSelectActive] = useState(false);
 
@@ -48,12 +50,17 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
     }, [setName])
     
     const changeProps = useCallback(({name, opts, defaultValue}: TemplateBlockProps) => {
-        console.log("changeProps called")
+        // console.log("changeProps called")
         let path = ReactEditor.findPath(editor, element)
         let newProps = {name, opts, defaultValue}
-        console.log(path, newProps, editor.children)
+        // console.log(path, newProps, editor.children)
         Transforms.setNodes(editor, newProps, {at:path})
     }, [])
+    
+    // useEffect(() => {
+    //     console.log(selectRef.current)
+    //     console.log(elementRef.current)
+    // }, [selectRef, elementRef])
     
     // somewhat unsafe but it works
     // useEffect(() => {
@@ -63,7 +70,7 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
     //         // setSelectActive(true);
     //     }
     // }, [focused, selected])
-
+    
     // TODO: fix navigation
     // const onKeyDown = (event: any) => {
     //     for (const hotkey in TEMPLATE_NAV_HOTKEYS) {
@@ -94,25 +101,34 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
     //     }
     // }
 
+    // this fix using the onmenuclose and onmenuopen hooks seems to work, but i'm not sure how safe it is
+    const defaultStyles: React.CSSProperties = {
+        boxShadow: selected && focused ? '0 0 0 2px #b4d5ff' : 'none',
+        transform: `translateY(${editName ? 0 : 2}px)`
+    }
+
+    const focusedStyles: React.CSSProperties = {
+        position: "relative",
+        zIndex: 99
+    }
+
     return (
         <span {...attributes}
             className="template-block"
             contentEditable={false}
-            style={{
-                boxShadow: selected && focused ? '0 0 0 2px #b4d5ff' : 'none',
-                transform: `translateY(${editName ? 0 : 2}px)`,
-            }}>
+            style={menuOpen ? {...defaultStyles, ...focusedStyles} : defaultStyles}>
             {editName ?
             (
                 <div className="content">
                     <AutoSizeInput placeholder="Name this field..." value={name} onInput={handleNameChange} onKeyDown={e => e.key === "Enter" && setEditName(!editName)} />
                 </div>
             )
-            : (<CreatableSelect 
+            : (<CreatableSelect
                     ref={selectRef}
                     styles={customSelectStyles} theme={customSelectTheme}
                     placeholder={name}
                     onChange={handleChange} onCreateOption={handleCreate}
+                    onMenuOpen={() => setMenuOpen(true)} onMenuClose={() => setMenuOpen(false)}
                     value={chosenValue} options={options} />)}
             <button className="name-setter" onClick={() => {
                 setEditName(!editName)
@@ -164,6 +180,7 @@ const customSelectStyles = {
     indicatorsContainer: (provided: any, state: any) => ({
         ...provided,
         height: '1.4em',
+        transform: "translateY(-2px)"
     }),
     menu: (provided: any, state: any) => ({
         ...provided,

@@ -75,7 +75,7 @@ export const RichTextEditor: React.FC = () => {
             setValue(value);
             const content = JSON.stringify(value);
             localStorage.setItem("content", content)
-            console.log(value)
+            // console.log(value)
 
             // you should be able to replace this code block with this addon:
             // https://github.com/ianstormtaylor/slate-plugins/tree/master/packages/slate-auto-replace

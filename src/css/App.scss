@@ -78,6 +78,31 @@
     }
 }
 
-footer .disclaimer {
-    font-size: 0.8rem;
+.modal-header, footer .oneline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    button {
+        outline: none;
+        border: none;
+        background-color: transparent;
+        height: fit-content;
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 1rem;
+
+        &:hover {
+            background-color: #ddd;
+        }
+
+        &:active {
+            background-color: #999;
+        }
+    }
+}
+
+.modal-header h2 {
+    display: inline-block;
+    margin: 0;
 }

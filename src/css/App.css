@@ -96,7 +96,40 @@
           box-shadow: 0 0 0 2px #b4d5ff;
 }
 
-footer .disclaimer {
-  font-size: 0.8rem;
+.modal-header, footer .oneline {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.modal-header button, footer .oneline button {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.modal-header button:hover, footer .oneline button:hover {
+  background-color: #ddd;
+}
+
+.modal-header button:active, footer .oneline button:active {
+  background-color: #999;
+}
+
+.modal-header h2 {
+  display: inline-block;
+  margin: 0;
 }
 /*# sourceMappingURL=App.css.map */
