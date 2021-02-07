@@ -3,7 +3,7 @@ import { isHotkey } from 'is-hotkey';
 
 import { HOTKEYS, BLOCK_HOTKEYS, FUNCTION_HOTKEYS, LIST_TYPES } from './consts';
 import { toggleMark, toggleBlock } from './utils'
-import { makeListBlock, toggleListBlock } from './lists';
+import { toggleListBlock } from './lists';
 
 export const hotkeyHandler = (event: any, editor: Editor) => {
     for (const hotkey in HOTKEYS) {

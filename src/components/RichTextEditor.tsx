@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Editable, withReact, Slate } from "slate-react";
+import { Editable, withReact, Slate, ReactEditor } from "slate-react";
 import { createEditor, Editor, Location, Node, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
 import SimpleBar from "simplebar-react";
@@ -121,9 +121,29 @@ export const RichTextEditor: React.FC = () => {
                     spellCheck
                     autoFocus
                     onKeyDown={e => {
-                        console.log(Editor.node(editor, editor.selection))
+                        // console.log(Editor.node(editor, editor.selection))
                         listKeyDown(editor)(e)
                         hotkeyHandler(e, editor)
+                    }}
+                    onSelect={e => {
+                        if (!(window as any).chrome)
+                            return
+                        if (editor.selection == null)
+                            return
+                        
+                        try {
+                            const domPoint = ReactEditor.toDOMPoint(
+                                editor,
+                                editor.selection.focus
+                            )
+                            const node = domPoint[0];
+                            if (node == null) return;
+                            const element = node.parentElement;
+                            if (element == null) return;
+                            element.scrollIntoView({behavior: "smooth", block: 'nearest'})
+                        } catch (e) {
+
+                        }
                     }}
                 />
             </SimpleBar>

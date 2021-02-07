@@ -1,4 +1,4 @@
-import { Editor, Transforms, Element as SlateElement, Node, NodeEntry, Path } from 'slate';
+import { Editor, Transforms, Element as SlateElement } from 'slate';
 import { LIST_TYPES } from './consts';
 
 export const toggleBlock = (editor: Editor, format: string) => {

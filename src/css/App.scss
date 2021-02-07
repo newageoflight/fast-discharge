@@ -52,6 +52,7 @@
 .editor {
     padding: 0 10px;
     height: inherit;
+    max-height: calc(100% - 2rem - 2px);
     // overflow-y: scroll;
     
     // &::-webkit-scrollbar {
