@@ -22,7 +22,7 @@ export const toMarkdown = (editor: Editor): string => {
     let textLines = text.split("\n")
     // convert to a boolean index of where there are list items or not
     // this will miss empty list items - the serialiser only introduces the spaces after the bullet point when there is content in the item
-    let matches = textLines.map(s => !!s.match(/^\s*(-|[0-9A-Za-z]+\.)\s+/g))
+    let matches = textLines.map(s => !!s.match(/^\s*(-|\d+\.)\s+/g))
     // look for a true/false/true block
     // it's easier if you just convert it to a string and use regex but again this feels very dumb to me for some reason
     let matchString = matches.map(s => s ? 't' : 'f').join('')
@@ -145,5 +145,10 @@ export const toClipboardHTML = (editor: Editor): void => {
     const item = new clipboard.ClipboardItem({
         "text/html": new Blob([toHTML(editor)], {type: "text/html"}),
     })
-    clipboard.write([item]);
+    try {
+        clipboard.write([item]);
+        window.alert("Copied successfully!")
+    } catch (error) {
+        window.alert("Copying failed!")
+    }
 }
