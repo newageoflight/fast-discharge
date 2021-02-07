@@ -43,6 +43,7 @@ function App() {
           <p>
             If you have experience working with Slate.js, React.js or Typescript, please consider contributing to this project on <a href="https://github.com/newageoflight/fast-discharge">Github</a>.
           </p>
+          <p>FastDischarge doesn't use any central servers; everything you enter into it is stored locally on your device, so there are no data privacy issues to worry about! (Don't believe me? Check the source code on <a href="https://github.com/newageoflight/fast-discharge">Github</a>!)</p>
           <p>Developed by <a href="mailto:camint3rnal@live.com">Christopher Chen</a> (JMO/Intern)</p>
           <h3>Usage guide</h3>
           <p>To <strong>create a template field</strong>, type <kbd>{"{{"}</kbd> into the editor or press the <InlineIcon icon="uil:brackets-curly" /> button in the toolbar.</p>
