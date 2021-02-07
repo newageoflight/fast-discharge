@@ -45,6 +45,7 @@ export const RichTextEditor: React.FC = () => {
         let tempLink = document.createElement("a")
         tempLink.href = fileDownloadUrl;
         tempLink.setAttribute("download", "template.fdt")
+        tempLink.setAttribute("target", "_blank")
         tempLink.click()
         tempLink.remove()
     }
