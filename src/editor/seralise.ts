@@ -18,8 +18,27 @@ export const toMarkdown = (editor: Editor): string => {
     });
     const text = processor.stringify(ast);
     // i can't figure out how to remove the unnecessary line breaks in the lists using remark's serialiser
+    // so i'm going to do it the stupid way using regex
+    let textLines = text.split("\n")
+    // convert to a boolean index of where there are list items or not
+    // this will miss empty list items - the serialiser only introduces the spaces after the bullet point when there is content in the item
+    let matches = textLines.map(s => !!s.match(/^\s*(-|[0-9A-Za-z]+\.)\s+/g))
+    // look for a true/false/true block
+    // it's easier if you just convert it to a string and use regex but again this feels very dumb to me for some reason
+    let matchString = matches.map(s => s ? 't' : 'f').join('')
+    let tftBlocks = matchString.matchAll(/t(ft)+/g)
+    let toRemove: number[] = []
+    for (let tft of tftBlocks) {
+        let [matched] = tft;
+        let { index } = tft;
+        // i wish there was a way to do this without the filter or the spread operator but js is dumb
+        let fPos = [...matched].map((val, idx) => (val === 'f') ? (index!+idx) : -1).filter(val => (val >= 0))
+        toRemove = toRemove.concat(fPos)
+    }
+    let finalLines = textLines.map((val, idx) => (!toRemove.includes(idx)) ? val : null).filter(val => val !== null)
+    let fixedText = finalLines.join('\n')
 
-    return text;
+    return fixedText;
 }
 
 export const toClipboardMD = (editor: Editor): void => {
