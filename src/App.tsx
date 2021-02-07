@@ -38,22 +38,22 @@ function App() {
           <p>FastDischarge aims to be an open-source medical documentation platform that is truly <em>fast</em>.</p>
           <p>
             With FastDischarge, you can easily create template fields and prepopulate them with commonly used values of your choice.
-            FastDischarge lets you write your progress notes and discharge letters faster, so you can get back to being a doctor.
-          </p>
-          <p>
-            If you have experience working with Slate.js, React.js or Typescript, please consider contributing to this project on <a href="https://github.com/newageoflight/fast-discharge">Github</a>.
+            FastDischarge lets you write your progress notes and discharge letters faster, so you can get back to doctoring.
           </p>
           <p>FastDischarge doesn't use any central servers; everything you enter into it is stored locally on your device, so there are no data privacy issues to worry about! (Don't believe me? Check the source code on <a href="https://github.com/newageoflight/fast-discharge">Github</a>!)</p>
-          <p>Developed by <a href="mailto:camint3rnal@live.com">Christopher Chen</a> (JMO/Intern)</p>
           <h3>Usage guide</h3>
           <p>To <strong>create a template field</strong>, type <kbd>{"{{"}</kbd> into the editor or press the <InlineIcon icon="uil:brackets-curly" /> button in the toolbar.</p>
           <p><strong>Set your template options</strong> by clicking on the dropdown menu and typing in some text.</p>
-          <p>Cycle to the next template field by pressing <kbd>TAB</kbd>; cycle to the previous template field by pressing <kbd>Shift+TAB</kbd></p>
-          <p>To finalise your document and copy it as plain text (e.g. Web DeLacy), press the <InlineIcon icon="ion:copy-outline" /> button in the toolbar.</p>
-          <p>To finalise your document and copy it as rich text (e.g. PowerChart), press the <InlineIcon icon="ion:copy" /> button in the toolbar.</p>
+          <p><strong>Cycle to the next template field</strong> by pressing <kbd>TAB</kbd>; <strong>cycle to the previous template field</strong> by pressing <kbd>Shift+TAB</kbd></p>
+          <p>To finalise your document and <strong>copy its contents as plain text</strong> (e.g. Web DeLacy), press the <InlineIcon icon="ion:copy-outline" /> button in the toolbar.</p>
+          <p>To finalise your document and <strong>copy its contents as rich text</strong> (e.g. PowerChart), press the <InlineIcon icon="ion:copy" /> button in the toolbar.</p>
         </div>
         <div className="modal-footer">
-
+          <h3>Contributing/credits</h3>
+          <p>
+            If you have experience working with Slate.js, React.js or Typescript, please consider contributing to this project on <a href="https://github.com/newageoflight/fast-discharge">Github</a>.
+          </p>
+          <p>Developed by <a href="mailto:camint3rnal@live.com">Christopher Chen</a> (JMO/Intern)</p>
         </div>
       </Modal>
     </div>
