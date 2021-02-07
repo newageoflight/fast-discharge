@@ -28,12 +28,13 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
     // probably shouldn't be using "any" as the type here but idk what else to do lol
     const selectRef = useRef<any>(null);
     // const elementRef = useRef<HTMLSpanElement>(null);
-    const editorSelection = useRef<any>(editor.selection);
+    // const editorSelection = useRef<any>(editor.selection);
     // const [selectActive, setSelectActive] = useState(false);
 
     const handleChange = useCallback((newValue: any, actionMeta: any) => {
         setChosenValue(newValue);
         changeProps({defaultValue: newValue})
+        // eslint-disable-next-line
     }, [setChosenValue])
     
     const handleCreate = (inputValue: any) => {
@@ -47,6 +48,7 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
         let newName = (evt.target as HTMLInputElement).value
         setName(newName);
         changeProps({name: newName})
+        // eslint-disable-next-line
     }, [setName])
     
     const changeProps = useCallback(({name, opts, defaultValue}: TemplateBlockProps) => {
@@ -55,6 +57,7 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
         let newProps = {name, opts, defaultValue}
         // console.log(path, newProps, editor.children)
         Transforms.setNodes(editor, newProps, {at:path})
+        // eslint-disable-next-line
     }, [])
     
     // useEffect(() => {

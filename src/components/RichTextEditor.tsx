@@ -27,7 +27,7 @@ export const RichTextEditor: React.FC = () => {
     const renderElement = useCallback(props => <Element {...props} />, [])
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
 
-    const editor = useMemo(() => withHistory(withEditList(withReact(withVoids(createEditor())))), [])
+    const editor = useMemo(() => withHistory(withReact(withEditList(withVoids(createEditor())))), [])
     
     // useEffect hook for inserting template tags
     useEffect(() => {
@@ -37,6 +37,7 @@ export const RichTextEditor: React.FC = () => {
             setInsertTemplate(false);
             setTarget(null);
         }
+        // eslint-disable-next-line
     }, [target])
     
     const exportTemplateAsFile = () => {
