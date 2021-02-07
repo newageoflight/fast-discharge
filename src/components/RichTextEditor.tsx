@@ -126,6 +126,8 @@ export const RichTextEditor: React.FC = () => {
                         hotkeyHandler(e, editor)
                     }}
                     onSelect={e => {
+                        // thanks:
+                        // https://github.com/ianstormtaylor/slate/issues/3750
                         if (!(window as any).chrome)
                             return
                         if (editor.selection == null)

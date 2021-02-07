@@ -48,6 +48,7 @@ function App() {
           <h3>Usage guide</h3>
           <p>To <strong>create a template field</strong>, type <kbd>{"{{"}</kbd> into the editor or press the <InlineIcon icon="uil:brackets-curly" /> button in the toolbar.</p>
           <p><strong>Set your template options</strong> by clicking on the dropdown menu and typing in some text.</p>
+          <p>Cycle to the next template field by pressing <kbd>TAB</kbd>; cycle to the previous template field by pressing <kbd>Shift+TAB</kbd></p>
           <p>To finalise your document and copy it as plain text (e.g. Web DeLacy), press the <InlineIcon icon="ion:copy-outline" /> button in the toolbar.</p>
           <p>To finalise your document and copy it as rich text (e.g. PowerChart), press the <InlineIcon icon="ion:copy" /> button in the toolbar.</p>
         </div>

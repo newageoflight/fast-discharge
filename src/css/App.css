@@ -148,4 +148,11 @@
   display: inline-block;
   margin: 0;
 }
+
+kbd {
+  background-color: #eee;
+  padding: 3px;
+  border-radius: 3px;
+  color: crimson;
+}
 /*# sourceMappingURL=App.css.map */
