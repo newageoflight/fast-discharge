@@ -1,4 +1,4 @@
-import { Editor as SlateEditor } from "slate";
+import { Editor as SlateEditor, NodeEntry } from "slate";
 import { EditListPlugin } from '@productboard/slate-edit-list';
 
 const editListOptions = {
@@ -28,10 +28,16 @@ export const toggleListBlock = (editor: SlateEditor, type?: string): void => {
     const currentlyInList = Editor.isSelectionInList(editor)
     if (!currentlyInList)
         Transforms.wrapInList(editor, type);
-    else
-        Transforms.unwrapList(editor);
-}
-
-export const insertNewListItem = (editor: SlateEditor): void => {
-    
+    else {
+        // check if the current list is of the same type
+        let currentList = Editor.getCurrentList(editor, editor.selection) as NodeEntry;
+        console.log(currentList);
+        let [currentListNode, currentListPath] = currentList;
+        // if not, change it to the other type
+        if (type && currentListNode.type !== type) {
+            Transforms.setNodes(editor, {type}, {at: currentListPath})
+        } else {
+            Transforms.unwrapList(editor);
+        }
+    }
 }

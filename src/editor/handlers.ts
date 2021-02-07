@@ -23,7 +23,7 @@ export const hotkeyHandler = (event: any, editor: Editor) => {
             if (LIST_TYPES.includes(block)) {
                 switch (block) {
                     case "bulleted-list":
-                        toggleListBlock(editor)
+                        toggleListBlock(editor, "bulleted-list")
                         break;
                     case "numbered-list":
                         toggleListBlock(editor, "numbered-list")

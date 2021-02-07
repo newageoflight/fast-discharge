@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Editable, withReact, Slate } from "slate-react";
 import { createEditor, Editor, Location, Node, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
+import SimpleBar from "simplebar-react";
+import "simplebar/dist/simplebar.min.css"
 
 import { withEditList, onKeyDown as listKeyDown, indentListItem, dedentListItem } from "./../editor/lists"
 import { hotkeyHandler } from '../editor/handlers'
@@ -17,9 +19,6 @@ import { ListButton } from "./ListButton";
 import { Toolbar } from './Toolbar'
 import { FunctionButton } from "./FunctionButton";
 import { toClipboardHTML, toClipboardMD } from "../editor/seralise";
-
-// TODO: implement template uploading
-// see here: https://stackoverflow.com/questions/57007536/react-js-reading-from-a-local-file
 
 export const RichTextEditor: React.FC = () => {
     const [value, setValue] = useState<Node[]>(JSON.parse((localStorage.getItem("content") as string)) || InitialState);
@@ -112,7 +111,7 @@ export const RichTextEditor: React.FC = () => {
                 <FunctionButton fn={exportTemplateAsFile} icon="bx:bxs-download" alt="Save current template/contents as file" />
                 <FunctionButton fn={loadTemplateFromFile} icon="ic:baseline-file-upload" alt="Open a template/document from a file" />
             </Toolbar>
-            <div className="editor">
+            <SimpleBar className="editor">
                 <Editable
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
@@ -125,7 +124,7 @@ export const RichTextEditor: React.FC = () => {
                         hotkeyHandler(e, editor)
                     }}
                 />
-            </div>
+            </SimpleBar>
         </Slate>
     )
 }

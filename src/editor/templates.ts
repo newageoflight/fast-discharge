@@ -27,11 +27,3 @@ export const findPreviousTemplate = (editor: Editor, at?: Location): void => {
         Transforms.select(editor, lastTemplatePath)
     }
 }
-
-export const focusNextTemplateElement = (): void => {
-    let currentActive = document.activeElement!.id
-    let currentNumber = parseInt(currentActive.match(/\d+/g)![0])
-    const nextSibling = document.querySelector(`#react-select-${currentNumber+2}-index`)
-    if (!!nextSibling)
-        (nextSibling as any).focus()
-}

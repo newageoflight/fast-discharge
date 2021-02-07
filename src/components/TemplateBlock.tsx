@@ -104,7 +104,8 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
     // this fix using the onmenuclose and onmenuopen hooks seems to work, but i'm not sure how safe it is
     const defaultStyles: React.CSSProperties = {
         boxShadow: selected && focused ? '0 0 0 2px #b4d5ff' : 'none',
-        transform: `translateY(${editName ? 0 : 2}px)`
+        transform: `translateY(${editName ? 0 : 2}px)`,
+        transition: "0.3s ease all"
     }
 
     const focusedStyles: React.CSSProperties = {
