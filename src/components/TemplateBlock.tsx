@@ -8,6 +8,7 @@ import AutoSizeInput from "react-input-autosize";
 
 interface TemplateBlockProps {
     name?: string;
+    type?: "void" | "date" | "list" | "ref";
     opts?: {label:string, value:string}[];
     defaultValue?: {label:string,value:string};
 }
@@ -51,59 +52,13 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
         // eslint-disable-next-line
     }, [setName])
     
-    const changeProps = useCallback(({name, opts, defaultValue}: TemplateBlockProps) => {
-        // console.log("changeProps called")
+    const changeProps = useCallback((props: TemplateBlockProps) => {
         let path = ReactEditor.findPath(editor, element)
-        let newProps = {name, opts, defaultValue}
-        // console.log(path, newProps, editor.children)
+        let newProps = {...props}
         Transforms.setNodes(editor, newProps, {at:path})
         // eslint-disable-next-line
     }, [])
     
-    // useEffect(() => {
-    //     console.log(selectRef.current)
-    //     console.log(elementRef.current)
-    // }, [selectRef, elementRef])
-    
-    // somewhat unsafe but it works
-    // useEffect(() => {
-    //     if (focused && selected && !!selectRef) {
-    //         editorSelection.current = editor.selection
-    //         selectRef!.current!.focus()
-    //         // setSelectActive(true);
-    //     }
-    // }, [focused, selected])
-    
-    // TODO: fix navigation
-    // const onKeyDown = (event: any) => {
-    //     for (const hotkey in TEMPLATE_NAV_HOTKEYS) {
-    //         if (isHotkey(hotkey, event)) {
-    //             event.preventDefault();
-    //             const fn = TEMPLATE_NAV_HOTKEYS[hotkey];
-    //             console.log(editorSelection.current)
-    //             fn(editor, editorSelection.current)
-    //         }
-    //     }
-    // }
-    
-
-    // const onKeyDown = (event: any) => {
-    //     console.log("keyDown event captured")
-    //     switch (event.key) {
-    //         case "Enter":
-    //             event.preventDefault();
-    //             if (focused && selected && !!selectRef && !selectActive) {
-    //                 editorSelection.current = editor.selection;
-    //                 selectRef.current.focus();
-    //                 console.log("Should focus selection box")
-    //                 setSelectActive(true);
-    //             } else if (selectActive) {
-    //                 console.log("Should refocus to editor")
-    //                 // refocus to parent
-    //             }
-    //     }
-    // }
-
     // this fix using the onmenuclose and onmenuopen hooks seems to work, but i'm not sure how safe it is
     const defaultStyles: React.CSSProperties = {
         boxShadow: selected && focused ? '0 0 0 2px #b4d5ff' : 'none',
@@ -153,7 +108,7 @@ export const insertTemplateBlock = (editor: Editor, {name, opts, defaultValue}: 
 
 const createOption = (label: string) => ({
     label,
-    value: label.toLowerCase().replace(/\W/g, '_')
+    value: label
 })
 
 // auto width: https://stackoverflow.com/questions/46571811/react-select-auto-size-width
@@ -166,9 +121,7 @@ const customSelectStyles = {
         paddingTop: "1px",
     }),
     valueContainer: (provided: any, state: any) => {
-        // console.log(state);
         let [currentOption] = state.getValue();
-        // console.log(currentOption)
         return ({
             ...provided,
             margin: "0 0 0 4px",

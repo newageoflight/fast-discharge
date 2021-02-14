@@ -7,6 +7,7 @@ import "simplebar/dist/simplebar.min.css"
 
 import { withEditList, onKeyDown as listKeyDown, indentListItem, dedentListItem } from "./../editor/lists"
 import { hotkeyHandler } from '../editor/handlers'
+import { toClipboardHTML, toClipboardMD } from "../editor/seralise";
 import { withVoids } from './../wraps/VoidBlocks';
 import { insertTemplateBlock } from "./TemplateBlock";
 import { InitialState } from "./../context/InitialState";
@@ -18,7 +19,7 @@ import { BlockButton } from "./BlockButton";
 import { ListButton } from "./ListButton";
 import { Toolbar } from './Toolbar'
 import { FunctionButton } from "./FunctionButton";
-import { toClipboardHTML, toClipboardMD } from "../editor/seralise";
+import { HoverMenu } from "./HoverMenu";
 
 export const RichTextEditor: React.FC = () => {
     const [value, setValue] = useState<Node[]>(JSON.parse((localStorage.getItem("content") as string)) || InitialState);
@@ -55,7 +56,6 @@ export const RichTextEditor: React.FC = () => {
         // see here: 
         // https://codepen.io/rkotze/pen/zjRXYr
         // https://stackoverflow.com/questions/57007536/react-js-reading-from-a-local-file
-        // console.log("File popup should now appear")
         const fileSelector = document.createElement("input");
         fileSelector.setAttribute("type", "file")
         fileSelector.click()
@@ -113,6 +113,7 @@ export const RichTextEditor: React.FC = () => {
                 <FunctionButton fn={exportTemplateAsFile} icon="bx:bxs-download" alt="Save current template/contents as file" />
                 <FunctionButton fn={loadTemplateFromFile} icon="ic:baseline-file-upload" alt="Open a template/document from a file" />
             </Toolbar>
+            <HoverMenu />
             <SimpleBar className="editor">
                 <Editable
                     renderElement={renderElement}

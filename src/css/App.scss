@@ -12,6 +12,49 @@
     border-radius: 5px 5px 0 0;
 }
 
+.hovering-menubar {
+    padding: 1px;
+    position: absolute;
+    z-index: 1;
+    top: -10000px;
+    left: -10000px;
+    margin-top: -6px;
+    opacity: 0;
+    background-color: #eee;
+    border-radius: 4px;
+    transition: opacity 0.75s;
+    
+    ul {
+        margin: 0;
+        white-space: nowrap;
+        padding-left: 0;
+        
+        > li {
+            display: inline-block;
+            padding-left: 0;
+
+            button {
+                font-size: 1rem;
+                outline: none;
+                border: none;
+                background: none;
+
+                &:hover {
+                    background-color: #ddd;
+                }
+                
+                &:active {
+                    background-color: #999;
+                }
+                
+                &.active {
+                    background-color: lightblue;
+                }
+            }
+        }
+    }
+}
+
 .toolbar-container ul {
     margin: 0;
     padding: 5px;

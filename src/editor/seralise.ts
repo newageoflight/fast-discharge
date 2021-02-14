@@ -57,7 +57,7 @@ const templatesToText = (node: Node): Node => {
 
     switch (newNode.type) {
         case "template-block":
-            return {text: (newNode.defaultValue ? (newNode.defaultValue as {label:string,value:string}).label : "")}
+            return {text: (newNode.defaultValue ? (newNode.defaultValue as {label:string,value:string}).value : "")}
         default:
             return newNode
     }

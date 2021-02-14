@@ -7,9 +7,10 @@ import { Editor, Node, NodeEntry, Location, Transforms } from 'slate';
 // TODO: fix the selection issues
 
 export const findNextTemplate = (editor: Editor, at?: Location): void => {
-    let previousPoint = Editor.before(editor, at || editor.selection!, {unit: "block"})
-    console.log(previousPoint, editor.children)
-    let nextTemplateNodeEntry = (Editor.next(editor, {at: previousPoint, match: (node: Node) => node.type === "template-block", voids: true}) as NodeEntry)
+    let referencePoint = at || editor.selection!
+    // let previousPoint = Editor.before(editor, at || editor.selection!, {unit: "block"})
+    // console.log(previousPoint, editor.children)
+    let nextTemplateNodeEntry = (Editor.next(editor, {at: referencePoint, match: (node: Node) => node.type === "template-block", mode: 'all', voids: true}) as NodeEntry)
     // console.log(nextTemplateNodeEntry)
     if (!!nextTemplateNodeEntry) {
         let [,nextTemplatePath] = nextTemplateNodeEntry
@@ -18,9 +19,10 @@ export const findNextTemplate = (editor: Editor, at?: Location): void => {
 }
 
 export const findPreviousTemplate = (editor: Editor, at?: Location): void => {
-    let nextPoint = Editor.after(editor, at || editor.selection!, {unit: "block"})
-    console.log(nextPoint, editor.children)
-    let lastTemplateNodeEntry = (Editor.previous(editor, {at: nextPoint, match: (node: Node) => node.type === "template-block", voids: true}) as NodeEntry)
+    let referencePoint = at || editor.selection!
+    // let nextPoint = Editor.after(editor, at || editor.selection!, {unit: "block"})
+    // console.log(nextPoint, editor.children)
+    let lastTemplateNodeEntry = (Editor.previous(editor, {at: referencePoint, match: (node: Node) => node.type === "template-block", mode: 'all', voids: true}) as NodeEntry)
     // console.log(lastTemplateNodeEntry)
     if (!!lastTemplateNodeEntry) {
         let [,lastTemplatePath] = lastTemplateNodeEntry
