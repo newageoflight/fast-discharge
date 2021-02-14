@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useRecoilValue } from "recoil";
 import { Editable, withReact, Slate, ReactEditor } from "slate-react";
-import { createEditor, Editor, Location, Node, Range, Transforms } from "slate";
+import { createEditor, Editor, Node, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
 import SimpleBar from "simplebar-react";
 import "simplebar/dist/simplebar.min.css"
@@ -20,10 +21,16 @@ import { ListButton } from "./ListButton";
 import { Toolbar } from './Toolbar'
 import { FunctionButton } from "./FunctionButton";
 import { HoverMenu } from "./HoverMenu";
+import { matchAfter, matchBefore } from './../editor/utils';
+import { DotAbbrevsState } from './../context/DotAbbrevs';
+import { HoverList } from './HoverList';
 
 export const RichTextEditor: React.FC = () => {
     const [value, setValue] = useState<Node[]>(JSON.parse((localStorage.getItem("content") as string)) || InitialState);
-    const [target, setTarget] = useState<Location | null>();
+    const [target, setTarget] = useState<Range | null>();
+    const [index, setIndex] = useState(0);
+    const [search, setSearch] = useState("");
+    const abbrevs = useRecoilValue(DotAbbrevsState);
     const [insertTemplate, setInsertTemplate] = useState(false);
     const renderElement = useCallback(props => <Element {...props} />, [])
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
@@ -39,7 +46,7 @@ export const RichTextEditor: React.FC = () => {
             setTarget(null);
         }
         // eslint-disable-next-line
-    }, [target])
+    }, [insertTemplate])
     
     const exportTemplateAsFile = () => {
         const blob = new Blob([JSON.stringify(editor.children)], {type: "application/json"})
@@ -85,15 +92,23 @@ export const RichTextEditor: React.FC = () => {
             if (selection && Range.isCollapsed(selection)) {
                 const [start] = Range.edges(selection);
                 // if the two characters beforce the cursor are {{, select them and replace with a template block
-                const before = Editor.before(editor, start, {distance: 2})
-                const beforeRange = before && Editor.range(editor, before, start)
-                const beforeText = beforeRange && Editor.string(editor, beforeRange)
-                const beforeMatch = beforeText && beforeText.match(/\{\{/);
-                if (beforeMatch) {
+                const wordBefore = Editor.before(editor, start, {unit: "word"})
+                const {beforeRange: beforeWordRange, beforeMatch: beforeWordMatch} = matchBefore(editor, wordBefore!, /^\.(\w+)$/)
+                const {afterMatch} = matchAfter(editor, start, /^(\s|$)/)
+                const {beforeRange: beforeTwoCharsRange, beforeMatch: beforeTwoCharsMatch} = matchBefore(editor, start, /\{\{/, {distance: 2})
+                if (beforeTwoCharsMatch) {
+                    setTarget(beforeTwoCharsRange as Range);
                     setInsertTemplate(true);
-                    setTarget(beforeRange as Location);
+                }
+                if (beforeWordMatch && afterMatch) {
+                    setTarget(beforeWordRange)
+                    setSearch(beforeWordMatch[1]);
+                    setIndex(0);
+                    return;
                 }
             }
+            
+            setTarget(null);
         }}>
             <Toolbar>
                 <MarkButton format="bold" icon="gridicons:bold" alt="Bold (Ctrl+B)" />
@@ -150,6 +165,8 @@ export const RichTextEditor: React.FC = () => {
                     }}
                 />
             </SimpleBar>
+            <HoverList opts={abbrevs} pos={index} editor={editor} target={target!} isActive={(target && abbrevs.length > 0) as boolean}
+            deps={[abbrevs.length, editor, index, search, target]} />
         </Slate>
     )
 }

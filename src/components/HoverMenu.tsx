@@ -3,6 +3,8 @@ import { Descendant, Editor, Range } from 'slate';
 import { ReactEditor, useSlate } from 'slate-react';
 import { Portal } from './utils/Portal';
 import { FunctionButton } from './FunctionButton';
+import { SetterOrUpdater, useSetRecoilState } from 'recoil';
+import { DotAbbrevsState } from './../context/DotAbbrevs';
 
 // based on this example:
 // https://github.com/ianstormtaylor/slate/blob/master/site/examples/hovering-toolbar.tsx
@@ -12,6 +14,7 @@ import { FunctionButton } from './FunctionButton';
 export const HoverMenu: React.FC = () => {
     const ref = useRef<HTMLDivElement | null>(null);
     const editor = useSlate();
+    const setDotAbbrevs = useSetRecoilState(DotAbbrevsState);
 
     useEffect(() => {
         const el = ref.current;
@@ -39,14 +42,14 @@ export const HoverMenu: React.FC = () => {
         <Portal>
             <div className="hovering-menubar" ref={ref}>
                 <ul>
-                    <FunctionButton fn={() => saveDotAbbrev(editor)} icon="bi:dot" alt="Save as a dot abbreviation" />
+                    <FunctionButton fn={() => saveDotAbbrev(editor, setDotAbbrevs)} icon="bi:dot" alt="Save as a dot abbreviation" />
                 </ul>
             </div>
         </Portal>
     )
 }
 
-function saveDotAbbrev(editor: Editor) {
+function saveDotAbbrev(editor: Editor, abbrevSetter: SetterOrUpdater<any>) {
     const { selection } = editor;
     const existingAbbrevs = localStorage.getItem("dotAbbrevs") && JSON.parse(localStorage.getItem("dotAbbrevs")!)
     // get the fragment
@@ -55,10 +58,12 @@ function saveDotAbbrev(editor: Editor) {
     let fragmentName = window.prompt("Name this fragment: ")
     let fragmentObject: Record<string,Descendant[]> = {}
     fragmentObject[fragmentName!] = fragment;
-    console.log(fragmentObject)
+    let newAbbrevs;
     if (existingAbbrevs) {
-        localStorage.setItem("dotAbbrevs", JSON.stringify({...existingAbbrevs, ...fragmentObject}))
+        newAbbrevs = {...existingAbbrevs, ...fragmentObject}
     } else {
-        localStorage.setItem("dotAbbrevs", JSON.stringify({...fragmentObject}))
+        newAbbrevs = {...fragmentObject}
     }
+    abbrevSetter(newAbbrevs);
+    localStorage.setItem("dotAbbrevs", JSON.stringify(newAbbrevs))
 }

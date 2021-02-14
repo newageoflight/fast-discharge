@@ -11,12 +11,6 @@
   min-height: 100vh;
 }
 
-.toolbar-container {
-  background: white;
-  z-index: 999 !important;
-  border-radius: 5px 5px 0 0;
-}
-
 .hovering-menubar {
   padding: 1px;
   position: absolute;
@@ -59,6 +53,34 @@
 
 .hovering-menubar ul > li button.active {
   background-color: lightblue;
+}
+
+.abbreviation-selector {
+  top: -9999px;
+  left: -9999px;
+  position: absolute;
+  z-index: 1;
+  padding: 3px;
+  background: #eee;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.abbreviation-selector .selector-item {
+  padding: 1px 3px;
+  border-radius: 3px;
+  background-color: transparent;
+}
+
+.abbreviation-selector .active-item {
+  background-color: #b4d5ff;
+}
+
+.toolbar-container {
+  background: white;
+  z-index: 999 !important;
+  border-radius: 5px 5px 0 0;
 }
 
 .toolbar-container ul {

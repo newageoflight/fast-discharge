@@ -1,4 +1,4 @@
-import { Editor, Transforms, Element as SlateElement } from 'slate';
+import { Editor, Transforms, Element as SlateElement, Point } from 'slate';
 import { LIST_TYPES } from './consts';
 
 export const toggleBlock = (editor: Editor, format: string) => {
@@ -41,4 +41,20 @@ export const isBlockActive = (editor: Editor, format: string) => {
 export const isMarkActive = (editor: Editor, format: string) => {
     const marks = Editor.marks(editor);
     return marks ? marks[format] === true : false
+}
+
+export const matchBefore = (editor: Editor, start: Point, match: RegExp, beforeOpts?: any) => {
+    const before = Editor.before(editor, start, beforeOpts)
+    const beforeRange = before && Editor.range(editor, before, start);
+    const beforeText = beforeRange && Editor.string(editor, beforeRange);
+    const beforeMatch = beforeText && beforeText.match(match);
+    return {beforeRange, beforeText, beforeMatch};
+}
+
+export const matchAfter = (editor: Editor, start: Point, match: RegExp, afterOpts?: any) => {
+    const after = Editor.after(editor, start, afterOpts);
+    const afterRange = Editor.range(editor, start, after);
+    const afterText = Editor.string(editor, afterRange);
+    const afterMatch = afterText.match(match);
+    return {afterRange, afterText, afterMatch};
 }
