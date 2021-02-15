@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { Editable, withReact, Slate, ReactEditor } from "slate-react";
-import { createEditor, Editor, Node, Range, Transforms } from "slate";
+import { createEditor, Editor, Location, Node, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
 import SimpleBar from "simplebar-react";
 import "simplebar/dist/simplebar.min.css"
@@ -26,8 +26,10 @@ import { DotAbbrevsState } from './../context/DotAbbrevs';
 import { HoverList } from './HoverList';
 
 export const RichTextEditor: React.FC = () => {
+    const searchRef = useRef<HTMLDivElement | null>(null);
     const [value, setValue] = useState<Node[]>(JSON.parse((localStorage.getItem("content") as string)) || InitialState);
     const [target, setTarget] = useState<Range | null>();
+    const [fragmentTarget, setFragmentTarget] = useState<Range | null>();
     const [index, setIndex] = useState(0);
     const [search, setSearch] = useState("");
     const abbrevs = useRecoilValue(DotAbbrevsState);
@@ -37,6 +39,10 @@ export const RichTextEditor: React.FC = () => {
 
     const editor = useMemo(() => withHistory(withReact(withEditList(withVoids(createEditor())))), [])
     
+    const searchedAbbrevs = Object.fromEntries(Object.entries(abbrevs).filter(([key]) => 
+        key.toLowerCase().startsWith(search.toLowerCase())
+    ));
+
     // useEffect hook for inserting template tags
     useEffect(() => {
         if (!!target && insertTemplate) {
@@ -47,6 +53,22 @@ export const RichTextEditor: React.FC = () => {
         }
         // eslint-disable-next-line
     }, [insertTemplate])
+    
+    // useEffect hook for fragment insertion dropdowns
+    useEffect(() => {
+        if (fragmentTarget && Object.keys(searchedAbbrevs).length > 0) {
+            console.log("Dotabbrev searcher should display")
+            console.log(searchedAbbrevs)
+            const el = searchRef.current;
+            const domRange = ReactEditor.toDOMRange(editor, fragmentTarget);
+            const rect = domRange.getBoundingClientRect();
+            el!.style.top = `${rect.top + window.pageYOffset + 24}px`
+            el!.style.left = `${rect.left + window.pageXOffset}px`
+        }
+    }, [searchedAbbrevs, editor, index, search, fragmentTarget])
+    // this sorta kinda works, just need to do the following:
+    // - add key event handlers to change 'pos'
+    // - separate the target variable for the fragment inserter and simple replacement
     
     const exportTemplateAsFile = () => {
         const blob = new Blob([JSON.stringify(editor.children)], {type: "application/json"})
@@ -78,6 +100,40 @@ export const RichTextEditor: React.FC = () => {
         })
     }
     
+    // fragment insertion keydown handler
+    const onKeyDown = useCallback(
+        (event: React.KeyboardEvent) => {
+            if (fragmentTarget) {
+                switch (event.key) {
+                    case "ArrowDown":
+                        event.preventDefault();
+                        const prevIndex = index >= Object.keys(searchedAbbrevs).length - 1 ? 0 : index + 1
+                        setIndex(prevIndex);
+                        break;
+                    case "ArrowUp":
+                        event.preventDefault();
+                        const nextIndex = index <= 0 ? Object.keys(searchedAbbrevs).length - 1 : index - 1
+                        setIndex(nextIndex);
+                        break;
+                    case "Tab":
+                    case "Enter":
+                        event.preventDefault();
+                        Transforms.select(editor, (fragmentTarget as Location));
+                        let keyToGet = Object.keys(searchedAbbrevs)[index]
+                        let fragmentToInsert = abbrevs[keyToGet]
+                        Editor.insertFragment(editor, fragmentToInsert);
+                        setFragmentTarget(null);
+                        break;
+                    case "Escape":
+                        event.preventDefault();
+                        setFragmentTarget(null);
+                        break;
+                }
+            }
+        },
+        [index, search, fragmentTarget],
+    )
+    
     return (
         <Slate editor={editor} value={value} onChange={value => {
             setValue(value);
@@ -93,22 +149,23 @@ export const RichTextEditor: React.FC = () => {
                 const [start] = Range.edges(selection);
                 // if the two characters beforce the cursor are {{, select them and replace with a template block
                 const wordBefore = Editor.before(editor, start, {unit: "word"})
-                const {beforeRange: beforeWordRange, beforeMatch: beforeWordMatch} = matchBefore(editor, wordBefore!, /^\.(\w+)$/)
+                const {beforeRange: beforeWordRange, beforeText: beforeWordText, beforeMatch: beforeWordMatch} = matchBefore(editor, wordBefore!, /^\.(\w+)$/, {}, start)
                 const {afterMatch} = matchAfter(editor, start, /^(\s|$)/)
                 const {beforeRange: beforeTwoCharsRange, beforeMatch: beforeTwoCharsMatch} = matchBefore(editor, start, /\{\{/, {distance: 2})
+                console.log(beforeWordMatch, beforeWordText, beforeWordRange)
                 if (beforeTwoCharsMatch) {
                     setTarget(beforeTwoCharsRange as Range);
                     setInsertTemplate(true);
                 }
                 if (beforeWordMatch && afterMatch) {
-                    setTarget(beforeWordRange)
+                    setFragmentTarget(beforeWordRange)
                     setSearch(beforeWordMatch[1]);
                     setIndex(0);
                     return;
                 }
             }
-            
-            setTarget(null);
+
+            setFragmentTarget(null);
         }}>
             <Toolbar>
                 <MarkButton format="bold" icon="gridicons:bold" alt="Bold (Ctrl+B)" />
@@ -138,8 +195,9 @@ export const RichTextEditor: React.FC = () => {
                     autoFocus
                     onKeyDown={e => {
                         // console.log(Editor.node(editor, editor.selection))
-                        listKeyDown(editor)(e)
-                        hotkeyHandler(e, editor)
+                        onKeyDown(e);
+                        listKeyDown(editor)(e);
+                        hotkeyHandler(e, editor);
                     }}
                     onSelect={e => {
                         // thanks:
@@ -165,8 +223,9 @@ export const RichTextEditor: React.FC = () => {
                     }}
                 />
             </SimpleBar>
-            <HoverList opts={abbrevs} pos={index} editor={editor} target={target!} isActive={(target && abbrevs.length > 0) as boolean}
-            deps={[abbrevs.length, editor, index, search, target]} />
+            {fragmentTarget && Object.keys(searchedAbbrevs).length > 0 && (
+                <HoverList opts={Object.keys(searchedAbbrevs)} pos={index} ref={searchRef} />
+            )}
         </Slate>
     )
 }

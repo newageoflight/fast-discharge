@@ -43,9 +43,10 @@ export const isMarkActive = (editor: Editor, format: string) => {
     return marks ? marks[format] === true : false
 }
 
-export const matchBefore = (editor: Editor, start: Point, match: RegExp, beforeOpts?: any) => {
+export const matchBefore = (editor: Editor, start: Point, match: RegExp, beforeOpts?: any, end?: Point) => {
+    let rangeEnd = end || start;
     const before = Editor.before(editor, start, beforeOpts)
-    const beforeRange = before && Editor.range(editor, before, start);
+    const beforeRange = before && Editor.range(editor, before, rangeEnd);
     const beforeText = beforeRange && Editor.string(editor, beforeRange);
     const beforeMatch = beforeText && beforeText.match(match);
     return {beforeRange, beforeText, beforeMatch};
