@@ -8,7 +8,7 @@ import AutoSizeInput from "react-input-autosize";
 
 interface TemplateBlockProps {
     name?: string;
-    type?: "void" | "date" | "list" | "ref";
+    templateType?: "void" | "date" | "list" | "multilist" | "ref" | "expr";
     opts?: {label:string, value:string}[];
     defaultValue?: {label:string,value:string};
 }
@@ -100,8 +100,8 @@ export const TemplateBlock: React.FC<RenderElementProps> = ({ attributes, childr
     )
 }
 
-export const insertTemplateBlock = (editor: Editor, {name, opts, defaultValue}: TemplateBlockProps) => {
-    const templateBlock = { type: "template-block", name, opts, defaultValue, children: [{text: ''}] }
+export const insertTemplateBlock = (editor: Editor, props: TemplateBlockProps) => {
+    const templateBlock = { type: "template-block", children: [{text: ''}], ...props }
     Transforms.insertNodes(editor, templateBlock);
     Transforms.move(editor);
 }
