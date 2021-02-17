@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { Descendant, Editor, Range } from 'slate';
 import { ReactEditor, useSlate } from 'slate-react';
 import { Portal } from './utils/Portal';
-import { FunctionButton } from './FunctionButton';
+import { FunctionButton } from './buttons/FunctionButton';
 import { SetterOrUpdater, useSetRecoilState } from 'recoil';
 import { DotAbbrevsState } from './../context/DotAbbrevs';
 

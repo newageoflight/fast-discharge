@@ -1,7 +1,7 @@
 import React from 'react';
 import { InlineIcon } from "@iconify/react-with-api";
 import { useSlate } from 'slate-react';
-import { isMarkActive, toggleMark } from '../editor/utils';
+import { isMarkActive, toggleMark } from '../../editor/utils';
 
 interface Props {
     format: string;

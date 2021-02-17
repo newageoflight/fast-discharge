@@ -1,5 +1,11 @@
-import { Editor, Transforms, Element as SlateElement, Point } from 'slate';
+import { Editor, Transforms, Element as SlateElement, Point, Range } from 'slate';
 import { LIST_TYPES } from './consts';
+
+interface EditorRangeMatch {
+    range: Range | undefined;
+    text: string | undefined;
+    match: "" | RegExpMatchArray | null | undefined;
+}
 
 export const toggleBlock = (editor: Editor, format: string) => {
     const isActive = isBlockActive(editor, format);
@@ -43,19 +49,19 @@ export const isMarkActive = (editor: Editor, format: string) => {
     return marks ? marks[format] === true : false
 }
 
-export const matchBefore = (editor: Editor, start: Point, match: RegExp, beforeOpts?: any, end?: Point) => {
-    let rangeEnd = end || start;
+export const matchBefore = (editor: Editor, start: Point, match: RegExp, beforeOpts?: any, end?: Point): EditorRangeMatch => {
+    const rangeEnd = end || start;
     const before = Editor.before(editor, start, beforeOpts)
     const beforeRange = before && Editor.range(editor, before, rangeEnd);
     const beforeText = beforeRange && Editor.string(editor, beforeRange);
     const beforeMatch = beforeText && beforeText.match(match);
-    return {beforeRange, beforeText, beforeMatch};
+    return {range: beforeRange, text: beforeText, match: beforeMatch};
 }
 
-export const matchAfter = (editor: Editor, start: Point, match: RegExp, afterOpts?: any) => {
+export const matchAfter = (editor: Editor, start: Point, match: RegExp, afterOpts?: any): EditorRangeMatch => {
     const after = Editor.after(editor, start, afterOpts);
     const afterRange = Editor.range(editor, start, after);
     const afterText = Editor.string(editor, afterRange);
     const afterMatch = afterText.match(match);
-    return {afterRange, afterText, afterMatch};
+    return {range: afterRange, text: afterText, match: afterMatch};
 }

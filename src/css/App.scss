@@ -58,6 +58,8 @@
     background: #eee;
     border-radius: 4px;
     box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    // overflow-y: scroll;
+    max-width: 500px;
     
     .selector-item {
         padding: 1px 3px;

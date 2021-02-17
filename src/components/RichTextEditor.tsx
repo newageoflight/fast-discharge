@@ -13,17 +13,18 @@ import { withVoids } from './../wraps/VoidBlocks';
 import { insertTemplateBlock } from "./TemplateBlock";
 import { InitialState } from "./../context/InitialState";
 
-import { Element } from './Element';
-import { Leaf } from './Leaf';
-import { MarkButton } from "./MarkButton";
-import { BlockButton } from "./BlockButton";
-import { ListButton } from "./ListButton";
+import { Element } from './utils/Element';
+import { Leaf } from './utils/Leaf';
+import { MarkButton } from "./buttons/MarkButton";
+import { BlockButton } from "./buttons/BlockButton";
+import { ListButton } from "./buttons/ListButton";
 import { Toolbar } from './Toolbar'
-import { FunctionButton } from "./FunctionButton";
+import { FunctionButton } from "./buttons/FunctionButton";
 import { HoverMenu } from "./HoverMenu";
 import { matchAfter, matchBefore } from './../editor/utils';
 import { DotAbbrevsState } from './../context/DotAbbrevs';
 import { HoverList } from './HoverList';
+import { downloadFile, uploadSingleFile } from './../utils/fileHandling';
 
 export const RichTextEditor: React.FC = () => {
     const searchRef = useRef<HTMLDivElement | null>(null);
@@ -40,7 +41,7 @@ export const RichTextEditor: React.FC = () => {
     const editor = useMemo(() => withHistory(withReact(withEditList(withVoids(createEditor())))), [])
     
     const searchedAbbrevs = Object.fromEntries(Object.entries(abbrevs).filter(([key]) => 
-        key.toLowerCase().startsWith(search.toLowerCase())
+        (search !== "$") ? key.toLowerCase().startsWith(search.toLowerCase()) : !!key
     ));
 
     // useEffect hook for inserting template tags
@@ -57,8 +58,8 @@ export const RichTextEditor: React.FC = () => {
     // useEffect hook for fragment insertion dropdowns
     useEffect(() => {
         if (fragmentTarget && Object.keys(searchedAbbrevs).length > 0) {
-            console.log("Dotabbrev searcher should display")
-            console.log(searchedAbbrevs)
+            // console.log("Dotabbrev searcher should display")
+            // console.log(search, searchedAbbrevs)
             const el = searchRef.current;
             const domRange = ReactEditor.toDOMRange(editor, fragmentTarget);
             const rect = domRange.getBoundingClientRect();
@@ -66,39 +67,16 @@ export const RichTextEditor: React.FC = () => {
             el!.style.left = `${rect.left + window.pageXOffset}px`
         }
     }, [searchedAbbrevs, editor, index, search, fragmentTarget])
-    // this sorta kinda works, just need to do the following:
-    // - add key event handlers to change 'pos'
-    // - separate the target variable for the fragment inserter and simple replacement
     
-    const exportTemplateAsFile = () => {
-        const blob = new Blob([JSON.stringify(editor.children)], {type: "application/json"})
-        const fileDownloadUrl = URL.createObjectURL(blob);
-        let tempLink = document.createElement("a")
-        tempLink.href = fileDownloadUrl;
-        tempLink.setAttribute("download", "template.fdt")
-        tempLink.setAttribute("target", "_blank")
-        tempLink.click()
-        tempLink.remove()
-    }
-    
-    const loadTemplateFromFile = () => {
-        // see here: 
-        // https://codepen.io/rkotze/pen/zjRXYr
-        // https://stackoverflow.com/questions/57007536/react-js-reading-from-a-local-file
-        const fileSelector = document.createElement("input");
-        fileSelector.setAttribute("type", "file")
-        fileSelector.click()
-        fileSelector.addEventListener("change", event => {
-            if (fileSelector.files && fileSelector.files.length >= 1) {
-                let file = fileSelector.files![0], fr = new FileReader();
-                fr.readAsText(file)
-                fr.onload = event => {
-                    let loaded = JSON.parse((event.target!.result as string))
-                    setValue(loaded)
-                }
-            }
-        })
-    }
+    const exportTemplateAsFile = () => downloadFile(new Blob([JSON.stringify(editor.children)], {type: "application/json"}), "template.fdt")
+
+    const loadTemplateFromFile = () => uploadSingleFile((file, fr) => {
+        fr.readAsText(file);
+        fr.onload = event => {
+            let loaded = JSON.parse((event.target!.result as string));
+            setValue(loaded);
+        }
+    })
     
     // fragment insertion keydown handler
     const onKeyDown = useCallback(
@@ -149,12 +127,19 @@ export const RichTextEditor: React.FC = () => {
                 const [start] = Range.edges(selection);
                 // if the two characters beforce the cursor are {{, select them and replace with a template block
                 const wordBefore = Editor.before(editor, start, {unit: "word"})
-                const {beforeRange: beforeWordRange, beforeText: beforeWordText, beforeMatch: beforeWordMatch} = matchBefore(editor, wordBefore!, /^\.(\w+)$/, {}, start)
-                const {afterMatch} = matchAfter(editor, start, /^(\s|$)/)
-                const {beforeRange: beforeTwoCharsRange, beforeMatch: beforeTwoCharsMatch} = matchBefore(editor, start, /\{\{/, {distance: 2})
-                console.log(beforeWordMatch, beforeWordText, beforeWordRange)
+                const wordBeforeMatch = wordBefore && matchBefore(editor, wordBefore, /^\.(\w+|\$)$/, {}, start)
+                let beforeWordRange, beforeWordText, beforeWordMatch;
+                if (wordBeforeMatch) {
+                    beforeWordRange = wordBeforeMatch.range;
+                    beforeWordText = wordBeforeMatch.text;
+                    beforeWordMatch = wordBeforeMatch.match;
+                }
+                // let {range: beforeWordRange, text: beforeWordText, match: beforeWordMatch} = wordBeforeMatch;
+                const {match: afterMatch} = matchAfter(editor, start, /^(\s|$)/)
+                const {range: beforeTwoCharsRange, match: beforeTwoCharsMatch} = matchBefore(editor, start, /\{\{/, {distance: 2})
+                // console.log(beforeWordMatch, beforeWordText, beforeWordRange)
                 if (beforeTwoCharsMatch) {
-                    setTarget(beforeTwoCharsRange as Range);
+                    setTarget(beforeTwoCharsRange);
                     setInsertTemplate(true);
                 }
                 if (beforeWordMatch && afterMatch) {

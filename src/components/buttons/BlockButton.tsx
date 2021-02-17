@@ -1,7 +1,7 @@
 import React from 'react'
 import { InlineIcon } from "@iconify/react-with-api";
 import { useSlate } from 'slate-react';
-import { toggleBlock, isBlockActive } from '../editor/utils';
+import { toggleBlock, isBlockActive } from '../../editor/utils';
 
 interface Props {
     format: string;

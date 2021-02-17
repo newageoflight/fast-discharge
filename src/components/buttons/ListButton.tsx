@@ -2,7 +2,7 @@ import React from 'react'
 import { InlineIcon } from "@iconify/react-with-api";
 import { Editor as SlateEditor } from "slate";
 import { useSlate } from 'slate-react';
-import { Editor, toggleListBlock } from '../editor/lists';
+import { Editor, toggleListBlock } from '../../editor/lists';
 
 interface Props {
     format: string;

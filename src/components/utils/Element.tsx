@@ -1,6 +1,6 @@
 import React from 'react'
 import { RenderElementProps } from "slate-react";
-import { TemplateBlock } from './TemplateBlock';
+import { TemplateBlock } from '../TemplateBlock';
 
 export const Element: React.FC<RenderElementProps> = ({ attributes, children, element }) => {
     switch (element.type) {

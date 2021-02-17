@@ -11,14 +11,19 @@ interface Props {
     pos: number;
 }
 
+interface SelectItemProps {
+    key: any;
+    active: boolean;
+}
+
 export const HoverList = React.forwardRef<HTMLDivElement, Props>(({ opts, pos }: Props, ref) => {
     return (
         <Portal>
             <div className="abbreviation-selector" ref={ref}>
                 {opts.map((opt, i) => (
-                    <div className={`selector-item ${pos === i ? 'active-item' : ''}`} key={opt}>
+                    <SelectItem key={opt} active={pos === i}>
                         {opt}
-                    </div>
+                    </SelectItem>
                 ))
                 }
             </div>
@@ -26,18 +31,11 @@ export const HoverList = React.forwardRef<HTMLDivElement, Props>(({ opts, pos }:
     )
 })
 
-// export const HoverList: React.FC<Props> = ({ opts, pos }) => {
-//     const ref = useRef<HTMLDivElement | null>(null);
-
-//     return (
-//         <Portal>
-//             <div className="abbreviation-selector" ref={ref}>
-//                 {opts.map((opt, i) => (
-//                     <div className={`selector-item ${pos === i ? "active-item" : ""}`} key={opt}>
-//                         {opt}
-//                     </div>
-//                 ))}
-//             </div>
-//         </Portal>
-//     )
-// }
+// The point of making this a separate component is that hopefully it'll be able to support onClick events
+const SelectItem: React.FC<SelectItemProps> = ({ active, children }) => {
+    return (
+        <div className={`selector-item ${active ? "active-item" : ""}`}>
+            {children}
+        </div>
+    )
+}
