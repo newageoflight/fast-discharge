@@ -1,19 +1,18 @@
-import React, { useCallback, useRef, useState } from 'react'
-import { Editor, Transforms } from 'slate';
-import { RenderElementProps, ReactEditor, useFocused, useSelected, useEditor } from 'slate-react'
-import { InlineIcon } from '@iconify/react-with-api';
-import AutoSizeInput from "react-input-autosize";
+import React, { useContext, useState } from 'react'
+import { RenderElementProps } from 'slate-react'
+import { BaseTemplate, BaseTemplateContext } from './BaseTemplate';
+import DatePicker from "react-datepicker";
 
 // should be a span with a button that allows you to pick a date. insert using @@
 
-export const DateTemplate: React.FC = () => {
-    const selected = useSelected();
-    const focused = useFocused();
-    const editor = useEditor();
+export const DateTemplate: React.FC<RenderElementProps> = ({ attributes, children, element }) => {
+    const { name } = useContext(BaseTemplateContext);
+    const [chosenDate, setChosenDate] = useState(new Date());
 
     return (
-        <div>
-            
-        </div>
+        <BaseTemplate renderProps={{attributes, element, children}}>
+            <DatePicker todayButton="Today" selected={chosenDate} onChange={(date: Date) => setChosenDate(date)}
+                isClearable placeholderText={name} />
+        </BaseTemplate>
     )
 }

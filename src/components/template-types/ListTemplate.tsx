@@ -1,12 +1,9 @@
-import React, { useCallback, useRef, useState } from 'react'
-import { Editor, Transforms } from 'slate';
-import { RenderElementProps, ReactEditor, useFocused, useSelected, useEditor } from 'slate-react'
+import React, { useCallback, useContext, useRef, useState } from 'react'
+import { RenderElementProps } from 'slate-react'
 import CreatableSelect from 'react-select/creatable'
-import { InlineIcon } from '@iconify/react-with-api';
 import { ValueType } from 'react-select';
-import AutoSizeInput from "react-input-autosize";
 
-import { TemplateBlockProps } from './BaseTemplate';
+import { BaseTemplate, BaseTemplateContext } from './BaseTemplate';
 
 // this template should be an inline editable element that also allows you to:
 // - set options
@@ -14,23 +11,11 @@ import { TemplateBlockProps } from './BaseTemplate';
 // insert using {{
 
 // TODO: add the ability to set the options while the template block is focused/selected
-export const ListTemplate: React.FC<RenderElementProps> = ({ attributes, children, element }) => {
-    const selected = useSelected();
-    const focused = useFocused();
-    const editor = useEditor();
-
-    // this next line looks ugly af but i'm not sure how else to do it
+export const ListTemplate: React.FC<RenderElementProps> = ({ attributes, element, children }) => {
+    const { onTop: menuOpen, setOnTop: setMenuOpen, name, changeProps } = useContext(BaseTemplateContext);
     const [chosenValue, setChosenValue] = useState<ValueType<{label:string, value:string},false>>(element.defaultValue ? (element.defaultValue as {label:string,value:string}) : null as ValueType<{label:string,value:string}, false>);
     const [options, setOptions] = useState<{label:string,value:string}[]>(element.opts ? element.opts as {label:string, value:string}[] : [])
-    const [name, setName] = useState<string>(element.name as string);
-    const [editName, setEditName] = useState(false);
-    const [menuOpen, setMenuOpen] = useState(false);
-    
-    // probably shouldn't be using "any" as the type here but idk what else to do lol
     const selectRef = useRef<any>(null);
-    // const elementRef = useRef<HTMLSpanElement>(null);
-    // const editorSelection = useRef<any>(editor.selection);
-    // const [selectActive, setSelectActive] = useState(false);
 
     const handleChange = useCallback((newValue: any, actionMeta: any) => {
         setChosenValue(newValue);
@@ -44,66 +29,18 @@ export const ListTemplate: React.FC<RenderElementProps> = ({ attributes, childre
         setChosenValue(newOption);
         changeProps({opts: [...options, newOption], defaultValue: newOption})
     }
-    
-    const handleNameChange = useCallback((evt: React.FormEvent) => {
-        let newName = (evt.target as HTMLInputElement).value
-        setName(newName);
-        changeProps({name: newName})
-        // eslint-disable-next-line
-    }, [setName])
-    
-    const changeProps = useCallback((props: TemplateBlockProps) => {
-        let path = ReactEditor.findPath(editor, element)
-        let newProps = {...props}
-        Transforms.setNodes(editor, newProps, {at:path})
-        // eslint-disable-next-line
-    }, [])
-    
-    // this fix using the onmenuclose and onmenuopen hooks seems to work, but i'm not sure how safe it is
-    const defaultStyles: React.CSSProperties = {
-        boxShadow: selected && focused ? '0 0 0 2px #b4d5ff' : 'none',
-        transform: `translateY(${editName ? 0 : 2}px)`,
-        transition: "0.3s ease all"
-    }
-
-    const focusedStyles: React.CSSProperties = {
-        position: "relative",
-        zIndex: 99
-    }
 
     return (
-        <span {...attributes}
-            className="template-block"
-            contentEditable={false}
-            style={menuOpen ? {...defaultStyles, ...focusedStyles} : defaultStyles}>
-            {editName ?
-            (
-                <div className="content">
-                    <AutoSizeInput placeholder="Name this field..." value={name} onInput={handleNameChange} onKeyDown={e => e.key === "Enter" && setEditName(!editName)} />
-                </div>
-            )
-            : (<CreatableSelect
-                    ref={selectRef}
-                    styles={customSelectStyles} theme={customSelectTheme}
-                    placeholder={name}
-                    onChange={handleChange} onCreateOption={handleCreate}
-                    onMenuOpen={() => setMenuOpen(true)} onMenuClose={() => setMenuOpen(false)}
-                    value={chosenValue} options={options} />)}
-            <button className="name-setter"
-                onClick={() => {
-                    setEditName(!editName)
-                }}
-                tabIndex={-1}
-            ><InlineIcon icon="bi:gear-fill" /></button>
-            {children}
-        </span>
+        <BaseTemplate renderProps={{attributes, element, children}}>
+            <CreatableSelect
+                ref={selectRef}
+                styles={customSelectStyles} theme={customSelectTheme}
+                placeholder={name}
+                onChange={handleChange} onCreateOption={handleCreate}
+                onMenuOpen={() => setMenuOpen(true)} onMenuClose={() => setMenuOpen(false)}
+                value={chosenValue} options={options} />
+        </BaseTemplate>
     )
-}
-
-export const insertListTemplate = (editor: Editor, {name, opts, defaultValue}: TemplateBlockProps) => {
-    const templateBlock = { type: "template-block", name, templateType: "list", opts, defaultValue, children: [{text: ''}] }
-    Transforms.insertNodes(editor, templateBlock);
-    Transforms.move(editor);
 }
 
 const createOption = (label: string) => ({
