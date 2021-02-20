@@ -1,46 +1,62 @@
-import React, { useCallback, useContext, useRef, useState } from 'react'
-import { RenderElementProps } from 'slate-react'
+import React, { useCallback, useRef, useState } from 'react'
 import CreatableSelect from 'react-select/creatable'
 import { ValueType } from 'react-select';
+import { Editor, Transforms } from 'slate';
+import { RenderElementProps } from 'slate-react';
 
-import { BaseTemplate, BaseTemplateContext } from './BaseTemplate';
+import { BaseTemplate } from './BaseTemplate';
+import { TemplateBlockProps } from '../../interfaces/Templates';
 
 // this template should be an inline editable element that also allows you to:
 // - set options
 // - expand to arbitrary slate json
 // insert using {{
+type OptionType = {
+    label: string,
+    value: string
+}
 
 // TODO: add the ability to set the options while the template block is focused/selected
 export const ListTemplate: React.FC<RenderElementProps> = ({ attributes, element, children }) => {
-    const { onTop: menuOpen, setOnTop: setMenuOpen, name, changeProps } = useContext(BaseTemplateContext);
-    const [chosenValue, setChosenValue] = useState<ValueType<{label:string, value:string},false>>(element.defaultValue ? (element.defaultValue as {label:string,value:string}) : null as ValueType<{label:string,value:string}, false>);
-    const [options, setOptions] = useState<{label:string,value:string}[]>(element.opts ? element.opts as {label:string, value:string}[] : [])
+    const isMulti = element.templateType === "multiselect"
+    const [chosenValue, setChosenValue] = useState<ValueType<OptionType,false>|ValueType<OptionType,false>[]>(element.defaultValue ? (element.defaultValue as {label:string,value:string}) : null as ValueType<{label:string,value:string}, false>);
+    const [options, setOptions] = useState<OptionType[]>(element.opts ? element.opts as OptionType[] : [])
     const selectRef = useRef<any>(null);
 
-    const handleChange = useCallback((newValue: any, actionMeta: any) => {
+    const handleChange = useCallback((newValue: any, actionMeta: any, changeProps: (props: TemplateBlockProps) => void) => {
         setChosenValue(newValue);
         changeProps({defaultValue: newValue})
         // eslint-disable-next-line
     }, [setChosenValue])
     
-    const handleCreate = (inputValue: any) => {
+    const handleCreate = (inputValue: any, changeProps: (props: TemplateBlockProps) => void) => {
         const newOption = createOption(inputValue);
         setOptions([...options, newOption])
-        setChosenValue(newOption);
+        setChosenValue(isMulti ? [...(element.defaultValue! as OptionType[]), newOption] : newOption);
         changeProps({opts: [...options, newOption], defaultValue: newOption})
     }
 
     return (
         <BaseTemplate renderProps={{attributes, element, children}}>
-            <CreatableSelect
+            {
+            ({ name, setOnTop: setMenuOpen, changeProps }) =>
+            (<CreatableSelect isMulti={isMulti}
                 ref={selectRef}
                 styles={customSelectStyles} theme={customSelectTheme}
                 placeholder={name}
-                onChange={handleChange} onCreateOption={handleCreate}
+                onChange={(newValue: any, actionMeta: any) => handleChange(newValue, actionMeta, changeProps)}
+                onCreateOption={(inputValue: any) => handleCreate(inputValue, changeProps)}
                 onMenuOpen={() => setMenuOpen(true)} onMenuClose={() => setMenuOpen(false)}
-                value={chosenValue} options={options} />
+                value={chosenValue} options={options} />)
+            }
         </BaseTemplate>
     )
+}
+
+export const insertListTemplateBlock = (editor: Editor, {name, opts, defaultValue}: TemplateBlockProps, isMulti?: boolean) => {
+    const templateBlock = { type: "template-block", templateType: `${isMulti ? "multiselect" : "select"}`, name, opts, defaultValue, children: [{text: ''}] }
+    Transforms.insertNodes(editor, templateBlock);
+    Transforms.move(editor);
 }
 
 const createOption = (label: string) => ({
@@ -58,12 +74,16 @@ const customSelectStyles = {
         paddingTop: "1px",
     }),
     valueContainer: (provided: any, state: any) => {
-        let [currentOption] = state.getValue();
+        // this doesn't work for multis so should be something else if multi
+        let { isMulti } = state;
+        let currentOptions = (state.getValue() as OptionType[]);
+        let optionsLength = currentOptions.map(opt => opt.label.length).reduce((a,b) => a+b+(isMulti ? 3 : 2), 0) - 2
         return ({
             ...provided,
             margin: "0 0 0 4px",
             transform: "translateY(-2px)",
-            width: `${(currentOption ? currentOption.label.length : state.selectProps.placeholder ? state.selectProps.placeholder.length : 5) + 2}ex`,
+            width: `${(currentOptions.length > 0 ? optionsLength :
+                state.selectProps.placeholder ? state.selectProps.placeholder.length : 5) + 2}ex`,
             minWidth: "5ex",
         })
     },
@@ -83,6 +103,14 @@ const customSelectStyles = {
         ...provided,
         marginTop: 0,
         zIndex: `${state.selectProps.menuIsOpen ? 999 : "inherit"}`
+    }),
+    multiValue: (provided: any, state: any) => ({
+        ...provided,
+        marginRight: "3px",
+    }),
+    multiValueLabel: (provided: any) => ({
+        ...provided,
+        padding: 0,
     }),
     option: (provided: any) => ({
         ...provided,

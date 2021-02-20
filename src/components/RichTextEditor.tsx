@@ -25,6 +25,9 @@ import { matchAfter, matchBefore } from './../editor/utils';
 import { DotAbbrevsState } from './../context/DotAbbrevs';
 import { HoverList } from './HoverList';
 import { downloadFile, uploadSingleFile } from './../utils/fileHandling';
+import { insertListTemplateBlock } from "./template-types/ListTemplate";
+import { insertDateTemplateBlock } from "./template-types/DateTemplate";
+import { insertVoidTemplateBlock } from "./template-types/VoidTemplate";
 
 export const RichTextEditor: React.FC = () => {
     const searchRef = useRef<HTMLDivElement | null>(null);
@@ -33,6 +36,7 @@ export const RichTextEditor: React.FC = () => {
     const [fragmentTarget, setFragmentTarget] = useState<Range | null>();
     const [index, setIndex] = useState(0);
     const [search, setSearch] = useState("");
+    const [replaceText, setReplaceText] = useState("");
     const abbrevs = useRecoilValue(DotAbbrevsState);
     const [insertTemplate, setInsertTemplate] = useState(false);
     const renderElement = useCallback(props => <Element {...props} />, [])
@@ -48,7 +52,20 @@ export const RichTextEditor: React.FC = () => {
     useEffect(() => {
         if (!!target && insertTemplate) {
             Transforms.select(editor, target!);
-            insertTemplateBlock(editor, {})
+            switch (replaceText) {
+                case "{{":
+                    insertListTemplateBlock(editor, {})
+                    break;
+                case "[[":
+                    insertListTemplateBlock(editor, {}, true)
+                    break;
+                case "@@":
+                    insertDateTemplateBlock(editor, {})
+                    break;
+                case "**":
+                    insertVoidTemplateBlock(editor, {})
+                    break;
+            }
             setInsertTemplate(false);
             setTarget(null);
         }
@@ -136,10 +153,11 @@ export const RichTextEditor: React.FC = () => {
                 }
                 // let {range: beforeWordRange, text: beforeWordText, match: beforeWordMatch} = wordBeforeMatch;
                 const {match: afterMatch} = matchAfter(editor, start, /^(\s|$)/)
-                const {range: beforeTwoCharsRange, match: beforeTwoCharsMatch} = matchBefore(editor, start, /\{\{/, {distance: 2})
+                const {range: beforeTwoCharsRange, match: beforeTwoCharsMatch, text: beforeTwoCharsText} = matchBefore(editor, start, /\{\{|\[\[|@@|\*\*/, {distance: 2})
                 // console.log(beforeWordMatch, beforeWordText, beforeWordRange)
                 if (beforeTwoCharsMatch) {
                     setTarget(beforeTwoCharsRange);
+                    setReplaceText(beforeTwoCharsText!);
                     setInsertTemplate(true);
                 }
                 if (beforeWordMatch && afterMatch) {

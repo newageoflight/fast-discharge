@@ -22,24 +22,27 @@ interface TemplatePassProps {
     onTop: boolean;
     setOnTop: React.Dispatch<React.SetStateAction<boolean>>;
     name: string;
-    element: SlateElement;
     editor: Editor;
     changeProps: (props: TemplateBlockProps) => void;
 }
 
-interface TemplateElementProps {
+export interface TemplateBaseProps {
     renderProps: RenderElementProps;
-    // templateProps: TemplatePassProps;
+    children: (templateProps: TemplatePassProps) => React.ReactElement;
+    tabIndex?: number;
+}
+export interface TemplateElementProps {
+    renderProps: RenderElementProps;
+    templateProps: TemplatePassProps;
 }
 
 // ok this approach clearly isn't working. here's a better idea
 // const BaseTemplate = (baseProps: TemplatePassProps) => React.FC<RenderElementProps> 
 // either way, the only real property needing to be satisfied is that
 // the base template can wrap around the template block type and provide it with the TemplatePassProps
+// a better way to do this might be to use a higher-order function that returns a slate element compatible component
 
-export const BaseTemplateContext = createContext({} as TemplatePassProps);
-
-export const BaseTemplate: React.FC<TemplateElementProps> = ({ renderProps: {attributes, children: renderChildren, element}, children }) => {
+export const BaseTemplate: React.FC<TemplateBaseProps> = ({ renderProps: {attributes, children: renderChildren, element}, children, tabIndex }) => {
     const selected = useSelected();
     const focused = useFocused();
     const editor = useEditor();
@@ -79,6 +82,7 @@ export const BaseTemplate: React.FC<TemplateElementProps> = ({ renderProps: {att
         <span {...attributes}
             className="template-block"
             contentEditable={false}
+            tabIndex={tabIndex}
             style={onTop ? {...defaultStyles, ...focusedStyles} : defaultStyles}>
             {editName ?
             (
@@ -86,11 +90,7 @@ export const BaseTemplate: React.FC<TemplateElementProps> = ({ renderProps: {att
                     <AutoSizeInput placeholder="Name this field..." value={name} onInput={handleNameChange} onKeyDown={e => e.key === "Enter" && setEditName(!editName)} />
                 </div>
             )
-            : (
-                <BaseTemplateContext.Provider value={{onTop, setOnTop, name, element, editor, changeProps}}>
-                    {children}
-                </BaseTemplateContext.Provider>
-            )}
+            : children({onTop, setOnTop, name, editor, changeProps})}
             <button className="name-setter"
                 onClick={() => {
                     setEditName(!editName)

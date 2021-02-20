@@ -1,6 +1,8 @@
 import React from 'react'
 import { RenderElementProps } from "slate-react";
-import { TemplateBlock } from '../TemplateBlock';
+import { VoidTemplate } from '../template-types/VoidTemplate';
+import { ListTemplate } from './../template-types/ListTemplate';
+import { DateTemplate } from './../template-types/DateTemplate';
 
 export const Element: React.FC<RenderElementProps> = ({ attributes, children, element }) => {
     switch (element.type) {
@@ -19,7 +21,18 @@ export const Element: React.FC<RenderElementProps> = ({ attributes, children, el
         case 'list-item':
             return <li {...attributes}>{children}</li>
         case 'template-block':
-            return <TemplateBlock attributes={attributes} children={children} element={element} />
+            switch (element.templateType) {
+                case "select":
+                    return <ListTemplate attributes={attributes} element={element}>{children}</ListTemplate>
+                case "multiselect":
+                    return <ListTemplate attributes={attributes} element={element}>{children}</ListTemplate>
+                case "void":
+                    return <VoidTemplate attributes={attributes} element={element}>{children}</VoidTemplate>
+                case "date":
+                    return <DateTemplate attributes={attributes} element={element}>{children}</DateTemplate>
+                default:
+                    return <VoidTemplate attributes={attributes} element={element}>{children}</VoidTemplate>
+            }
         default:
             return <p {...attributes}>{children}</p>
     }

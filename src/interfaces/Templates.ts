@@ -8,13 +8,13 @@
 export interface TemplateBlockProps {
     name?: string;
     canOvertype?: boolean;
-    type?: "void" | "date" | "select" | "multiselect" | "ref" | "expr" | "wiz";
+    templateType?: "void" | "date" | "select" | "multiselect" | "ref" | "expr" | "wiz";
     opts?: {label:string, value:string}[];
     defaultValue?: {label:string,value:string};
 }
 
 // template variables cannot be voids, refs, expressions or wizards
 export interface TemplateVariable {
-    type: "date" | "select" | "multiselect";
+    templateType: "date" | "select" | "multiselect" | "ref" | "expr" | "wiz";
     value: Date | string | string[];
 }
