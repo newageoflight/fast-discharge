@@ -222,4 +222,16 @@ kbd {
   border-radius: 3px;
   color: crimson;
 }
+
+.react-datepicker__input-container > input {
+  width: 15ex;
+}
+
+dl dt {
+  font-weight: bold;
+}
+
+dl dt::after {
+  content: ": ";
+}
 /*# sourceMappingURL=App.css.map */

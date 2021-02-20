@@ -5,12 +5,18 @@
 // - multiselect: can join multiple string options together
 // - ref: dynamic links or simple values provided through an addon
 // - expr: a nunjucks expression that is dependent on other variables in the scope of the template
+
+type OptionType = {
+    label: string,
+    value: string
+}
+
 export interface TemplateBlockProps {
     name?: string;
     canOvertype?: boolean;
     templateType?: "void" | "date" | "select" | "multiselect" | "ref" | "expr" | "wiz";
-    opts?: {label:string, value:string}[];
-    defaultValue?: {label:string,value:string};
+    opts?: OptionType[];
+    defaultValue?: OptionType | OptionType[] | Date | string;
 }
 
 // template variables cannot be voids, refs, expressions or wizards

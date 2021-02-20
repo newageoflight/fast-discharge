@@ -9,6 +9,11 @@ import * as clipboard from "clipboard-polyfill";
 // https://github.com/accordproject/markdown-transform/tree/master/packages/markdown-slate/
 // https://github.com/inokawa/remark-slate-transformer
 
+type OptionType = {
+    label: string,
+    value: string
+}
+
 export const toMarkdown = (editor: Editor): string => {
     const preprocessed = editor.children.map(preprocessMDNode)
     const processor = unified().use(slateToRemark).use(stringify, {bullet: "-"})
@@ -50,6 +55,7 @@ export const toClipboardMD = (editor: Editor): void => {
 }
 
 const templatesToText = (node: Node): Node => {
+    // console.log(node)
     let newNode = {...node};
 
     if (newNode.children)
@@ -57,7 +63,23 @@ const templatesToText = (node: Node): Node => {
 
     switch (newNode.type) {
         case "template-block":
-            return {text: (newNode.defaultValue ? (newNode.defaultValue as {label:string,value:string}).value : "")}
+            switch (newNode.templateType) {
+                case "select":
+                    return {text: (newNode.defaultValue ? (newNode.defaultValue as OptionType).value : "")}
+                case "multiselect":
+                    // console.table(newNode.defaultValue)
+                    return {text: (newNode.defaultValue ? (newNode.defaultValue as OptionType[]).map(opt => opt.value).join(", ") : "")}
+                case "date":
+                    let dateAsString;
+                    if (newNode.defaultValue) {
+                        let nodeDate = (typeof newNode.defaultValue === "string") ? new Date(newNode.defaultValue) : newNode.defaultValue as Date;
+                        dateAsString = `${nodeDate.getDate()}/${nodeDate.getMonth() + 1}/${nodeDate.getFullYear()}`
+                    }
+                    // console.log(dateAsString)
+                    return {text: dateAsString ? dateAsString : ""}
+                default:
+                    return {text: ""}
+            }
         default:
             return newNode
     }
@@ -90,7 +112,7 @@ const preprocessMDNode = (node: Node): Node => {
         case "list-item":
             return {...newNode, type: "listItem"}
         case "template-block":
-            return {text: (newNode.defaultValue ? (newNode.defaultValue as {label:string,value:string}).label : "")}
+            return templatesToText(node)
         default:
             return newNode
     }

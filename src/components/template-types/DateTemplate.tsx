@@ -10,12 +10,23 @@ import { TemplateBlockProps } from './../../interfaces/Templates';
 // should be a span with a button that allows you to pick a date. insert using @@
 
 export const DateTemplate: React.FC<RenderElementProps> = ({ attributes, children, element }) => {
-    const [chosenDate, setChosenDate] = useState(new Date());
+    let safeDate;
+    if (element.defaultValue instanceof Date) {
+        safeDate = element.defaultValue
+    } else if (typeof element.defaultValue === "string") {
+        safeDate = new Date(element.defaultValue);
+    }
+    const [chosenDate, setChosenDate] = useState(safeDate || new Date());
+
+    const modifyDate = (date: Date, changeProps: (props: TemplateBlockProps) => void) => {
+        setChosenDate(date);
+        changeProps({defaultValue: date})
+    }
 
     return (
         <BaseTemplate renderProps={{attributes, element, children}}>
-            {({ name }) => 
-                <DatePicker todayButton="Today" selected={chosenDate} onChange={(date: Date) => setChosenDate(date)}
+            {({ name, changeProps }) => 
+                <DatePicker todayButton="Today" selected={chosenDate} onChange={(date: Date) => modifyDate(date, changeProps)}
                     isClearable placeholderText={name} dateFormat="dd/MM/yyyy" />
             }
         </BaseTemplate>

@@ -12,24 +12,38 @@ export const HelpModalContents: React.FC =() => {
                 FastDischarge lets you write your progress notes and discharge letters faster, so you can get back to doctoring.
               </p>
               <p>FastDischarge doesn't use any central servers; everything you enter into it is stored locally on your device, so there are no data privacy issues to worry about! (Don't believe me? Check the source code on <a href="https://github.com/newageoflight/fast-discharge">Github</a>!)</p>
-              <h3>Usage guide</h3>
-              <h4>Writing documents and templates</h4>
-              <p>To <strong>create a template field</strong>, type <kbd>{"{{"}</kbd> into the editor or press the <InlineIcon icon="uil:brackets-curly" /> button in the toolbar.</p>
-              <p><strong>Set your template options</strong> by clicking on the dropdown menu and typing in some text.</p>
+              <h2>Usage guide</h2>
+
+              <h3>Templates</h3>
+              <p>With FastDischarge you can create several kinds of template fields:</p>
+              <dl>
+                <dt>Selection (list)</dt>
+                <dd>To select from a simple list of terms (e.g. attending doctors), type in <kbd>{"{{"}</kbd></dd>
+                <dt>Multiple selection (list)</dt>
+                <dd>To select multiple items from a list of terms (e.g. background conditions), type in <kbd>[[</kbd></dd>
+                <dt>Dates</dt>
+                <dd>To insert a date-picker (e.g. for admission and discharge dates), type in <kbd>@@</kbd></dd>
+                <dt>Voids</dt>
+                <dd>To insert a void (whose sole purpose is to be given a name and replaced), type in <kbd>**</kbd></dd>
+              </dl>
+              <p><strong>For list template types, you can set options</strong> by clicking on the dropdown menu and typing in some text.</p>
               <p><strong>Cycle to the next template field</strong> by pressing <kbd>TAB</kbd>; <strong>cycle to the previous template field</strong> by pressing <kbd>Shift+TAB</kbd></p>
-              <p>If you frequently use a snippet, you can save it as a "dot abbreviation" by selecting it and clicking the <InlineIcon icon="bi:dot" /> dot icon in the hovering selection menu. You will be asked to give it a name.</p>
-              <p>You can later invoke the snippet by typing <kbd>.nameOfYourAbbreviation</kbd>, e.g. if you named it "cag" type <kbd>.cag</kbd></p>
               <p>[UNDER DEVELOPMENT] You can also cycle to template fields by pressing <kbd>Ctrl+[</kbd> for the previous and <kbd>Ctrl+]</kbd> for the next</p>
-              <h4>Finalising documents</h4>
+
+              <h3>Snippets and dot abbreviations</h3>
+              <p>If you frequently use a snippet, you can save it as a <strong>dot abbreviation</strong> by selecting it and clicking the <InlineIcon icon="bi:dot" /> dot icon in the hovering selection menu. You will be asked to give it a name.</p>
+              <p>You can later invoke the snippet by typing <kbd>.nameOfYourAbbreviation</kbd>, e.g. if you named it "cag" type <kbd>.cag</kbd></p>
+              <h3>Finalising documents</h3>
               <p>To finalise your document and <strong>copy its contents as plain text</strong> (e.g. Web DeLacy), press the <InlineIcon icon="ion:copy-outline" /> button in the toolbar.</p>
               <p>To finalise your document and <strong>copy its contents as rich text</strong> (e.g. PowerChart), press the <InlineIcon icon="ion:copy" /> button in the toolbar.</p>
-              <h4>Taking your settings with you</h4>
+              <h3>Taking your settings with you</h3>
               <p>I'm still not sure if there are legal issues around having user accounts to store your abbreviations, especially when sensitive patient data is concerned, so you'll have to store them as files if you want to take them around.</p>
-              <p>For this there are the <InlineIcon icon="bx:bxs-save" /> "save my abbreviations" and <InlineIcon icon="bi:cloud-upload" /> "load my abbreviations" buttons</p>
+              <p>For this there are the <InlineIcon icon="bx:bxs-save" /> <strong>save my abbreviations</strong> and <InlineIcon icon="bi:cloud-upload" /> <strong>load my abbreviations</strong> buttons</p>
             </div>
+
             <div className="modal-footer">
-              <h3>Contributing/credits</h3>
-              <p>FastDischarge might frequently break and be full of bugs because it's not even really in alpha yet, so don't expect too much out of it!</p>
+              <h2>Contributing/credits</h2>
+              <p>FastDischarge might frequently break and be full of bugs because it's still early days, so don't expect too much out of it!</p>
               <p>
                 If you have experience working with Slate.js, React.js or Typescript, please consider contributing to this project on <a href="https://github.com/newageoflight/fast-discharge">Github</a>.
               </p>
