@@ -10,7 +10,7 @@ import { TemplateBlockProps } from './../../interfaces/Templates';
 
 export const VoidTemplate: React.FC<RenderElementProps> = ({ attributes, element, children }) => {
     return (
-        <BaseTemplate renderProps={{attributes, element, children}} tabIndex={0}>
+        <BaseTemplate renderProps={{attributes, element, children}} tabIndex={0} canOverwrite={true}>
             {({ name }) => <>{name}</>}
         </BaseTemplate>
     )
