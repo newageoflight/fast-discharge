@@ -5,6 +5,8 @@
 // - multiselect: can join multiple string options together
 // - ref: dynamic links or simple values provided through an addon
 // - expr: a nunjucks expression that is dependent on other variables in the scope of the template
+// - wiz: a "wizard" - essentially invokes a form that links to blocks that will be inserted in place of the template
+//   depending on what values are entered in the form
 
 type OptionType = {
     label: string,
