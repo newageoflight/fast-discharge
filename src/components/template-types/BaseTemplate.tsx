@@ -1,11 +1,10 @@
-import React, { createContext, useCallback, useState } from 'react'
-import { Transforms, Editor, Element as SlateElement } from 'slate';
+import React, { useCallback, useState } from 'react'
+import { Transforms, Editor } from 'slate';
 import { useSelected, useFocused, useEditor, ReactEditor, RenderElementProps } from 'slate-react';
 import { InlineIcon } from '@iconify/react-with-api';
 import AutoSizeInput from "react-input-autosize";
 
 import { TemplateBlockProps } from "../../interfaces/Templates"
-import { findNextTemplate } from './../../editor/templates';
 
 // base type for all templates
 // should have:
