@@ -31,7 +31,7 @@ export const ListTemplate: React.FC<RenderElementProps> = ({ attributes, element
     
     const handleCreate = (inputValue: any, changeProps: (props: TemplateBlockProps) => void) => {
         const newOption = createOption(inputValue);
-        const newSetOption = isMulti ? [...(element.defaultValue! as OptionType[]), newOption] : newOption
+        const newSetOption = isMulti ? [...((element.defaultValue ? element.defaultValue : []) as OptionType[]), newOption] : newOption
         setOptions([...options, newOption])
         setChosenValue(newSetOption);
         changeProps({opts: [...options, newOption], defaultValue: newSetOption})
