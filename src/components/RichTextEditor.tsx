@@ -192,7 +192,6 @@ export const RichTextEditor: React.FC = () => {
                 <ListButton format="numbered-list" icon="ic:baseline-format-list-numbered" alt="Numbered list (Ctrl+/)" />
                 <FunctionButton fn={indentListItem} icon="bx:bx-right-indent" alt="Indent list item (Tab)" />
                 <FunctionButton fn={dedentListItem} icon="bx:bx-left-indent" alt="Dedent list item (Shift-Tab)" />
-                <FunctionButton fn={(editor: Editor) => insertTemplateBlock(editor, {})} icon="uil:brackets-curly" alt="Insert a template block (type in {{)" />
                 <FunctionButton fn={toClipboardMD} icon="ion:copy-outline" alt="Copy to clipboard as plain text (Markdown)" />
                 <FunctionButton fn={toClipboardHTML} icon="ion:copy" alt="Copy to clipboard as rich text" />
                 <FunctionButton fn={exportTemplateAsFile} icon="bx:bxs-download" alt="Save current template/contents as file" />
