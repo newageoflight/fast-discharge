@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { Editable, withReact, Slate, ReactEditor } from "slate-react";
 import { createEditor, Editor, Location, Node, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
@@ -37,7 +37,7 @@ export const RichTextEditor: React.FC = () => {
     const [index, setIndex] = useState(0);
     const [search, setSearch] = useState("");
     const [replaceText, setReplaceText] = useState("");
-    const abbrevs = useRecoilValue(DotAbbrevsState);
+    const [abbrevs, setAbbrevs] = useRecoilState(DotAbbrevsState);
     const [insertTemplate, setInsertTemplate] = useState(false);
     const renderElement = useCallback(props => <Element {...props} />, [])
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
@@ -86,12 +86,22 @@ export const RichTextEditor: React.FC = () => {
     }, [searchedAbbrevs, editor, index, search, fragmentTarget])
     
     const exportTemplateAsFile = () => downloadFile(new Blob([JSON.stringify(editor.children)], {type: "application/json"}), "template.fdt")
+    
+    const exportAbbrevsAsFile = () => downloadFile(new Blob([JSON.stringify(abbrevs)], {type: "application/json"}), "abbreviations.fda")
 
     const loadTemplateFromFile = () => uploadSingleFile((file, fr) => {
         fr.readAsText(file);
         fr.onload = event => {
             let loaded = JSON.parse((event.target!.result as string));
             setValue(loaded);
+        }
+    })
+    
+    const loadAbbrevsFromFile = () => uploadSingleFile((file, fr) => {
+        fr.readAsText(file);
+        fr.onload = event => {
+            let loaded = JSON.parse((event.target!.result as string));
+            setAbbrevs(loaded);
         }
     })
     
@@ -187,6 +197,8 @@ export const RichTextEditor: React.FC = () => {
                 <FunctionButton fn={toClipboardHTML} icon="ion:copy" alt="Copy to clipboard as rich text" />
                 <FunctionButton fn={exportTemplateAsFile} icon="bx:bxs-download" alt="Save current template/contents as file" />
                 <FunctionButton fn={loadTemplateFromFile} icon="ic:baseline-file-upload" alt="Open a template/document from a file" />
+                <FunctionButton fn={exportAbbrevsAsFile} icon="bx:bxs-save" alt="Save your abbreviations into a file" />
+                <FunctionButton fn={loadAbbrevsFromFile} icon="bi:cloud-upload" alt="Load your abbreviations from a file" />
             </Toolbar>
             <HoverMenu />
             <SimpleBar className="editor">
