@@ -1,26 +1,26 @@
 {
   "files": {
     "main.css": "/fast-discharge/static/css/main.dcd132b5.chunk.css",
-    "main.js": "/fast-discharge/static/js/main.8e161326.chunk.js",
-    "main.js.map": "/fast-discharge/static/js/main.8e161326.chunk.js.map",
-    "runtime-main.js": "/fast-discharge/static/js/runtime-main.8235ed57.js",
-    "runtime-main.js.map": "/fast-discharge/static/js/runtime-main.8235ed57.js.map",
+    "main.js": "/fast-discharge/static/js/main.170f7e96.chunk.js",
+    "main.js.map": "/fast-discharge/static/js/main.170f7e96.chunk.js.map",
+    "runtime-main.js": "/fast-discharge/static/js/runtime-main.28cfe446.js",
+    "runtime-main.js.map": "/fast-discharge/static/js/runtime-main.28cfe446.js.map",
     "static/css/2.bd96bfa5.chunk.css": "/fast-discharge/static/css/2.bd96bfa5.chunk.css",
-    "static/js/2.5e1f0aac.chunk.js": "/fast-discharge/static/js/2.5e1f0aac.chunk.js",
-    "static/js/2.5e1f0aac.chunk.js.map": "/fast-discharge/static/js/2.5e1f0aac.chunk.js.map",
-    "static/js/3.f909e2df.chunk.js": "/fast-discharge/static/js/3.f909e2df.chunk.js",
-    "static/js/3.f909e2df.chunk.js.map": "/fast-discharge/static/js/3.f909e2df.chunk.js.map",
+    "static/js/2.66ee5f10.chunk.js": "/fast-discharge/static/js/2.66ee5f10.chunk.js",
+    "static/js/2.66ee5f10.chunk.js.map": "/fast-discharge/static/js/2.66ee5f10.chunk.js.map",
+    "static/js/3.5e7adef5.chunk.js": "/fast-discharge/static/js/3.5e7adef5.chunk.js",
+    "static/js/3.5e7adef5.chunk.js.map": "/fast-discharge/static/js/3.5e7adef5.chunk.js.map",
     "index.html": "/fast-discharge/index.html",
     "static/css/2.bd96bfa5.chunk.css.map": "/fast-discharge/static/css/2.bd96bfa5.chunk.css.map",
     "static/css/main.dcd132b5.chunk.css.map": "/fast-discharge/static/css/main.dcd132b5.chunk.css.map",
-    "static/js/2.5e1f0aac.chunk.js.LICENSE.txt": "/fast-discharge/static/js/2.5e1f0aac.chunk.js.LICENSE.txt",
+    "static/js/2.66ee5f10.chunk.js.LICENSE.txt": "/fast-discharge/static/js/2.66ee5f10.chunk.js.LICENSE.txt",
     "static/media/running.bda043eb.svg": "/fast-discharge/static/media/running.bda043eb.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.8235ed57.js",
+    "static/js/runtime-main.28cfe446.js",
     "static/css/2.bd96bfa5.chunk.css",
-    "static/js/2.5e1f0aac.chunk.js",
+    "static/js/2.66ee5f10.chunk.js",
     "static/css/main.dcd132b5.chunk.css",
-    "static/js/main.8e161326.chunk.js"
+    "static/js/main.170f7e96.chunk.js"
   ]
 }
