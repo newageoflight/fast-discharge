@@ -66,22 +66,22 @@ export const BaseTemplate: React.FC<TemplateBaseProps> = ({ renderProps: {attrib
         // eslint-disable-next-line
     }, [element])
     
-    const overWrite = (evt: React.KeyboardEvent) => {
-        let path = ReactEditor.findPath(editor, element)
-        if (evt.key.length === 1 && !editName) {
-            let currentNode = Editor.node(editor, path)
-            let newNode = {text: `${evt.key}`}
-            // set the node's props as follows
-            Transforms.setNodes(editor, newNode)
-            console.log(evt.key)
-            console.log(path, editor.children, Editor.node(editor, path))
-            Transforms.removeNodes(editor, {at: path, voids: true})
-            Transforms.insertText(editor, evt.key, {at: path, voids: true})
-            Transforms.select(editor, path)
-            console.log(path, editor.children, Editor.node(editor, path))
-            console.log("Should overwrite this node with whatever you typed or pasted")
-        }
-    }
+    // const overWrite = (evt: React.KeyboardEvent) => {
+    //     let path = ReactEditor.findPath(editor, element)
+    //     if (evt.key.length === 1 && !editName) {
+    //         let currentNode = Editor.node(editor, path)
+    //         let newNode = {text: `${evt.key}`}
+    //         // set the node's props as follows
+    //         Transforms.setNodes(editor, newNode)
+    //         console.log(evt.key)
+    //         console.log(path, editor.children, Editor.node(editor, path))
+    //         Transforms.removeNodes(editor, {at: path, voids: true})
+    //         Transforms.insertText(editor, evt.key, {at: path, voids: true})
+    //         Transforms.select(editor, path)
+    //         console.log(path, editor.children, Editor.node(editor, path))
+    //         console.log("Should overwrite this node with whatever you typed or pasted")
+    //     }
+    // }
     
     // this fix using the onmenuclose and onmenuopen hooks seems to work, but i'm not sure how safe it is
     const defaultStyles: React.CSSProperties = {
@@ -100,7 +100,7 @@ export const BaseTemplate: React.FC<TemplateBaseProps> = ({ renderProps: {attrib
             className="template-block"
             contentEditable={false}
             tabIndex={tabIndex}
-            onKeyDown={canOverwrite ? overWrite : undefined}
+            // onKeyDown={canOverwrite ? overWrite : undefined}
             style={onTop ? {...defaultStyles, ...focusedStyles} : defaultStyles}>
             {editName ?
             (

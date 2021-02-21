@@ -5,12 +5,16 @@ import { createEditor, Editor, Location, Node, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
 import SimpleBar from "simplebar-react";
 import "simplebar/dist/simplebar.min.css"
+// now need to refactor so that udecode's plugins are used here
+// things that need to be rewritten before I consider it "publicly releasable":
+// - the entire editor
+// - the plugins (abbreviation creation and template blocks)
+// - with slate 0.60.4, possibly the way the rendering of templates is done
 
 import { withEditList, onKeyDown as listKeyDown, indentListItem, dedentListItem } from "./../editor/lists"
 import { hotkeyHandler } from '../editor/handlers'
 import { toClipboardHTML, toClipboardMD } from "../editor/seralise";
 import { withVoids } from './../wraps/VoidBlocks';
-import { insertTemplateBlock } from "./TemplateBlock";
 import { InitialState } from "./../context/InitialState";
 
 import { Element } from './utils/Element';
@@ -28,6 +32,10 @@ import { downloadFile, uploadSingleFile } from './../utils/fileHandling';
 import { insertListTemplateBlock } from "./template-types/ListTemplate";
 import { insertDateTemplateBlock } from "./template-types/DateTemplate";
 import { insertVoidTemplateBlock } from "./template-types/VoidTemplate";
+
+// note: much of it will need to be rewritten to use @udecode/slate-plugins (already installed)
+// just because it's much more flexible that way and i hate having to write my own html all the time
+// plus, it should add support for a bunch of extra features i don't really want to code myself
 
 export const RichTextEditor: React.FC = () => {
     const searchRef = useRef<HTMLDivElement | null>(null);

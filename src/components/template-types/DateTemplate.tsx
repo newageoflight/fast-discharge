@@ -25,9 +25,10 @@ export const DateTemplate: React.FC<RenderElementProps> = ({ attributes, childre
 
     return (
         <BaseTemplate renderProps={{attributes, element, children}}>
-            {({ name, changeProps }) => 
+            {({ name, changeProps, setOnTop }) => 
                 <DatePicker todayButton="Today" selected={chosenDate} onChange={(date: Date) => modifyDate(date, changeProps)}
-                    isClearable placeholderText={name} dateFormat="dd/MM/yyyy" />
+                    isClearable placeholderText={name} dateFormat="dd/MM/yyyy"
+                    onCalendarOpen={() => setOnTop(true)} onCalendarClose={() => setOnTop(false)} />
             }
         </BaseTemplate>
     )
