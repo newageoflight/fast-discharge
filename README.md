@@ -1,5 +1,5 @@
 # FastDischarge
-![FastDischarge logo](./public/logo192.png)
+![FastDischarge logo](./public/android-chrome-192x192.png)
 
 A text editor designed for facilitation of faster discharge summaries and medical documentation, similar to EPIC's Smart Text. Written with Slate/React/Typescript.
 
