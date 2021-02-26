@@ -74,5 +74,6 @@
     "@types/react-select": "^4.0.13",
     "@types/styled-components": "^5.1.7",
     "gh-pages": "^3.1.0"
-  }
+  },
+  "homepage": "http://newageoflight.github.io/fast-discharge"
 }
