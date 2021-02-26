@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
-import { Descendant, Editor, Location, Range, Transforms } from "slate";
+import { Editor, Location, Range, Transforms } from "slate";
 import { matchBefore, matchAfter } from "../../utils/matches";
+import { DotAbbreviationRecord, DotAbbreviationValueProps } from "./interfaces/DotAbbrevMeta";
 
-export const useFragmentInserter = (abbrevs: Record<string, Descendant[]>) => {
+export const useFragmentInserter = (abbrevs: DotAbbreviationRecord) => {
     const [target, setTarget] = useState<Range | null>();
     const [index, setIndex] = useState(0);
     const [search, setSearch] = useState("");
@@ -11,11 +12,11 @@ export const useFragmentInserter = (abbrevs: Record<string, Descendant[]>) => {
         (search !== "$") ? key.toLowerCase().startsWith(search.toLowerCase()) : !!key
     ));
     
-    const onInsertFragment = useCallback((editor: Editor, data: [key: string, value: Descendant[]]) => {
+    const onInsertFragment = useCallback((editor: Editor, data: [key: string, value: DotAbbreviationValueProps]) => {
         if (!!target) {
             let [, value] = data;
             Transforms.select(editor, target);
-            Editor.insertFragment(editor, value)
+            Editor.insertFragment(editor, value.value)
             setTarget(null)
         }
     }, [target])
@@ -39,7 +40,7 @@ export const useFragmentInserter = (abbrevs: Record<string, Descendant[]>) => {
                     event.preventDefault();
                     Transforms.select(editor, (target as Location));
                     let keyToGet = Object.keys(searchedAbbrevs)[index]
-                    let fragmentToInsert = abbrevs[keyToGet]
+                    let {value: fragmentToInsert} = abbrevs[keyToGet]
                     Editor.insertFragment(editor, fragmentToInsert);
                     setTarget(null);
                     break;

@@ -9,6 +9,7 @@ import { OneLine } from './components/OneLine';
 import { FancyButton } from './components/FancyButton';
 
 import "./css/App.css"
+import logo from "./dischargeicon.png"
 
 Modal.setAppElement("#root")
 
@@ -18,7 +19,10 @@ function App() {
   return (
     <div className="App">
       <header>
-        <h1>FastDischarge</h1>
+        <h1>
+          <img src={logo} alt="FastDischarge logo" style={{display: "inline-block", height: "1.3em", marginRight: "2px", transform: "translateY(7px)"}}/>
+          FastDischarge
+        </h1>
       </header>
       <EditorContainer>
         <TextEditor />

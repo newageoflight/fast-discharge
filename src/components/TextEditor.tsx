@@ -1,6 +1,6 @@
 import { BalloonToolbar, EditablePlugins, HeadingToolbar, pipe, SlateDocument, ToolbarButton, ToolbarElement, ToolbarList, ToolbarMark } from '@udecode/slate-plugins';
 import React, { useMemo, useState } from 'react'
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { createEditor, Node, Transforms } from 'slate';
 import { Slate } from 'slate-react';
 import { InlineIcon } from "@iconify/react-with-api";
@@ -21,26 +21,20 @@ import { OneLine } from './OneLine';
 import { FancyButton } from './FancyButton';
 import { downloadFile, uploadSingleFile } from './../utils/fileHandling';
 import { EditorVariablesState, findTemplateVariables } from './../context/EditorContent';
+import { InitialState as initialValue } from '../context/InitialState';
+import { FragmentInserterPopup } from './../editor/newPlugins/FragmentInserter/components/FragmentInserterPopup';
+import { DotAbbreviationMetaProps } from './../editor/newPlugins/FragmentInserter/interfaces/DotAbbrevMeta';
 
 Modal.setAppElement("#root");
-
-const initialValue: Node[] = [
-    {
-        type: "p",
-        children: [
-            {
-                text: "This is just some text",
-            }
-        ]
-    }
-]
 
 export const TextEditor: React.FC = () => {
     const startingState = JSON.parse(localStorage.getItem("content") as string) || initialValue;
     const [value, setValue] = useState<Node[]>(startingState);
     const [dotAbbrevs, setDotAbbrevs] = useRecoilState(DotAbbrevsState);
-    const [templateVars, setTemplateVars] = useRecoilState(EditorVariablesState);
+    const setTemplateVars = useSetRecoilState(EditorVariablesState);
     const [settingsOpen, setSettingsOpen] = useState(false);
+    const [createSnippet, setCreateSnippet] = useState(false);
+    const [lastSelection, setLastSelection] = useState<any>();
 
     const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
     
@@ -116,9 +110,13 @@ export const TextEditor: React.FC = () => {
                         onKeyDown={[onKeyDownFragmentInserter]} onKeyDownDeps={[index, target, search]}
                         spellCheck autoFocus />
                     <BalloonToolbar theme="dark" arrow={true}>
-                        <ToolbarButton onMouseDown={e => saveDotAbbrev(editor, setDotAbbrevs)} icon={<InlineIcon icon="bi:dot" />} tooltip={{content: "Store selection as a snippet", theme: "light-border"}} />
+                        <ToolbarButton onMouseDown={e => {
+                            setCreateSnippet(true);
+                            setLastSelection(editor.selection);
+                        }} icon={<InlineIcon icon="bi:dot" />} tooltip={{content: "Store selection as a snippet", theme: "light-border"}} />
                     </BalloonToolbar>
                     <FragmentInserterMenu at={target} pos={index} options={searchedAbbrevs} onClickItem={onInsertFragment} />
+                    {createSnippet && <FragmentInserterPopup setComplete={v => setCreateSnippet(!v)} setFragments={setDotAbbrevs} lastSelection={lastSelection} />}
                 </SimpleBar>
             </Slate>
             <Modal isOpen={settingsOpen} onRequestClose={() => setSettingsOpen(false)}>
@@ -127,8 +125,8 @@ export const TextEditor: React.FC = () => {
                     <FancyButton onClick={() => setSettingsOpen(false)}><InlineIcon icon="eva:close-fill" /></FancyButton>
                 </OneLine>
                 <h2>Abbreviations</h2>
-                <p>Load my abbreviations: <button onClick={e => loadAbbrevsFromFile()}><InlineIcon icon="ic:baseline-file-upload" /></button></p>
-                <p>Save my abbreviations: <button onClick={e => exportAbbrevsAsFile()}><InlineIcon icon="bx:bxs-download" /></button></p>
+                <p>Load my abbreviations: <FancyButton onClick={e => loadAbbrevsFromFile()}><InlineIcon icon="ic:baseline-file-upload" /></FancyButton></p>
+                <p>Save my abbreviations: <FancyButton onClick={e => exportAbbrevsAsFile()}><InlineIcon icon="bx:bxs-download" /></FancyButton></p>
                 <p>[this section under construction!]</p>
             </Modal>
         </>
