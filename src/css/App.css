@@ -1,3 +1,7 @@
+body {
+  overflow-y: hidden;
+}
+
 .App {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -11,124 +15,7 @@
   min-height: 100vh;
 }
 
-.hovering-menubar {
-  padding: 1px;
-  position: absolute;
-  z-index: 1;
-  top: -10000px;
-  left: -10000px;
-  margin-top: -6px;
-  opacity: 0;
-  background-color: #eee;
-  border-radius: 4px;
-  -webkit-transition: opacity 0.75s;
-  transition: opacity 0.75s;
-}
-
-.hovering-menubar ul {
-  margin: 0;
-  white-space: nowrap;
-  padding-left: 0;
-}
-
-.hovering-menubar ul > li {
-  display: inline-block;
-  padding-left: 0;
-}
-
-.hovering-menubar ul > li button {
-  font-size: 1rem;
-  outline: none;
-  border: none;
-  background: none;
-}
-
-.hovering-menubar ul > li button:hover {
-  background-color: #ddd;
-}
-
-.hovering-menubar ul > li button:active {
-  background-color: #999;
-}
-
-.hovering-menubar ul > li button.active {
-  background-color: lightblue;
-}
-
-.abbreviation-selector {
-  top: -9999px;
-  left: -9999px;
-  position: absolute;
-  z-index: 1;
-  padding: 3px;
-  background: #eee;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-          box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-  max-width: 500px;
-}
-
-.abbreviation-selector .selector-item {
-  padding: 1px 3px;
-  border-radius: 3px;
-  background-color: transparent;
-}
-
-.abbreviation-selector .active-item {
-  background-color: #b4d5ff;
-}
-
-.toolbar-container {
-  background: white;
-  z-index: 999 !important;
-  border-radius: 5px 5px 0 0;
-}
-
-.toolbar-container ul {
-  margin: 0;
-  padding: 5px;
-  border-bottom: 1px solid lightgray;
-  white-space: nowrap;
-  overflow-x: scroll;
-  scrollbar-width: 0;
-}
-
-.toolbar-container ul > li {
-  display: inline-block;
-}
-
-.toolbar-container ul > li button {
-  font-size: 1rem;
-  outline: none;
-  border: none;
-  -webkit-transition: 0.3s all ease;
-  transition: 0.3s all ease;
-  background: none;
-}
-
-.toolbar-container ul > li button:hover {
-  background-color: #ddd;
-}
-
-.toolbar-container ul > li button:active {
-  background-color: #999;
-}
-
-.toolbar-container ul > li button.active {
-  background-color: lightblue;
-}
-
-.toolbar-container ul::-webkit-scrollbar {
-  height: 0;
-}
-
-.editor {
-  padding: 0 10px;
-  height: inherit;
-  max-height: calc(100% - 2rem - 2px);
-}
-
-.editor-container {
+.container {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
@@ -137,83 +24,10 @@
   height: 80vh;
 }
 
-.template-block {
-  padding: 3px 3px 2px;
-  margin: 0 1px;
-  vertical-align: baseline;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  border-radius: 4px;
-  background-color: #eee;
-  font-size: 0.9rem;
-}
-
-.template-block > div:first-child {
-  -webkit-box-flex: 1;
-      -ms-flex: 1 1 auto;
-          flex: 1 1 auto;
-  -ms-flex-preferred-size: inherit;
-      flex-basis: inherit;
-}
-
-.template-block > div:first-child > input[type=text] {
-  width: 90%;
-}
-
-.template-block > button.name-setter {
-  display: inline-block;
-  border: none;
-  border-radius: 5px;
-  outline: none;
-  -webkit-transition: 0.3s ease all;
-  transition: 0.3s ease all;
-}
-
-.template-block > button.name-setter:focus {
-  -webkit-box-shadow: 0 0 0 2px #b4d5ff;
-          box-shadow: 0 0 0 2px #b4d5ff;
-}
-
-.modal-header, footer .oneline {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.modal-header button, footer .oneline button {
-  outline: none;
-  border: none;
-  background-color: transparent;
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
-  height: fit-content;
-  padding: 5px;
-  border-radius: 5px;
-  font-size: 1rem;
-}
-
-.modal-header button:hover, footer .oneline button:hover {
-  background-color: #ddd;
-}
-
-.modal-header button:active, footer .oneline button:active {
-  background-color: #999;
-}
-
-.modal-header h2 {
-  display: inline-block;
-  margin: 0;
+.editor {
+  padding: 5px 10px;
+  height: inherit;
+  max-height: calc(100% - 3rem);
 }
 
 kbd {
@@ -233,5 +47,17 @@ dl dt {
 
 dl dt::after {
   content: ": ";
+}
+
+.tippy-box[data-theme~=light-border][data-placement^=top] > .tippy-arrow:after {
+  top: 3px;
+  left: -7.5px;
+}
+
+.tippy-box[data-theme~=light-border] {
+  -webkit-transform: translateY(10px);
+          transform: translateY(10px);
+  padding: 3px;
+  border-radius: 3px;
 }
 /*# sourceMappingURL=App.css.map */

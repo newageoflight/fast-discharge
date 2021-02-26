@@ -1,9 +1,9 @@
 import { atom } from "recoil";
-import { Descendant } from "slate";
+import { Descendant } from 'slate';
 
 const existingAbbrevs = localStorage.getItem("dotAbbrevs")
 
-export const DotAbbrevsState = atom({
+export const DotAbbrevsState = atom<Record<string, Descendant[]>>({
     key: "DotAbbreviations",
-    default: existingAbbrevs ? (JSON.parse(existingAbbrevs) as Record<string, Descendant[]>) : ({} as Record<string, Descendant[]>)
+    default: existingAbbrevs ? JSON.parse(existingAbbrevs) : {}
 })

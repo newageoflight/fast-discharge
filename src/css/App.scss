@@ -1,3 +1,7 @@
+body {
+    overflow-y: hidden;
+}
+
 .App {
     display: flex;
     flex-direction: column;
@@ -6,199 +10,17 @@
     min-height: 100vh;
 }
 
-.hovering-menubar {
-    padding: 1px;
-    position: absolute;
-    z-index: 1;
-    top: -10000px;
-    left: -10000px;
-    margin-top: -6px;
-    opacity: 0;
-    background-color: #eee;
-    border-radius: 4px;
-    transition: opacity 0.75s;
-    
-    ul {
-        margin: 0;
-        white-space: nowrap;
-        padding-left: 0;
-        
-        > li {
-            display: inline-block;
-            padding-left: 0;
-
-            button {
-                font-size: 1rem;
-                outline: none;
-                border: none;
-                background: none;
-
-                &:hover {
-                    background-color: #ddd;
-                }
-                
-                &:active {
-                    background-color: #999;
-                }
-                
-                &.active {
-                    background-color: lightblue;
-                }
-            }
-        }
-    }
-}
-
-.abbreviation-selector {
-    top: -9999px;
-    left: -9999px;
-    position: absolute;
-    z-index: 1;
-    padding: 3px;
-    background: #eee;
-    border-radius: 4px;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
-    // overflow-y: scroll;
-    max-width: 500px;
-    
-    .selector-item {
-        padding: 1px 3px;
-        border-radius: 3px;
-        background-color: transparent;
-    }
-
-    .active-item {
-        background-color: #b4d5ff;
-    }
-}
-
-.toolbar-container {
-    background: white;
-    z-index: 999 !important;
-    border-radius: 5px 5px 0 0;
-}
-
-.toolbar-container ul {
-    margin: 0;
-    padding: 5px;
-    border-bottom: 1px solid lightgray;
-    white-space: nowrap;
-    overflow-x: scroll;
-    scrollbar-width: 0;
-
-    > li {
-        display: inline-block;
-        
-        button {
-            font-size: 1rem;
-            outline: none;
-            border: none;
-            transition: 0.3s all ease;
-            background: none;
-
-            &:hover {
-                background-color: #ddd;
-            }
-            
-            &:active {
-                background-color: #999;
-            }
-            
-            &.active {
-                background-color: lightblue;
-            }
-        }
-    }
-    
-    &::-webkit-scrollbar {
-        height: 0;
-    }
-}
-
-.editor {
-    padding: 0 10px;
-    height: inherit;
-    max-height: calc(100% - 2rem - 2px);
-    // overflow-y: scroll;
-    
-    // &::-webkit-scrollbar {
-    //     width: 10px;
-    //     background: transparent;
-    // }
-    
-    // &::-webkit-scrollbar-thumb {
-    //     background-color: rgba(221, 221, 221, 0.7);
-    //     border-radius: 5px;
-    //     margin-right: 2px;
-    // }
-}
-
-.editor-container {
+.container {
     flex-grow: 1;
     border: 1px solid lightgray;
     border-radius: 5px;
     height: 80vh;
 }
 
-.template-block {
-    padding: 3px 3px 2px; 
-    margin: 0 1px;
-    vertical-align: baseline;
-    display: inline-flex;
-    flex-direction: row;
-    border-radius: 4px;
-    background-color: #eee;
-    font-size: 0.9rem;
-    
-    > div:first-child {
-        flex: 1 1 auto;
-        flex-basis: inherit;
-        
-        > input[type=text] {
-            width: 90%;
-        }
-    }
-    
-    > button.name-setter {
-        display: inline-block;
-        border: none;
-        border-radius: 5px;
-        outline: none;
-        transition: 0.3s ease all;
-        
-        &:focus {
-            box-shadow: 0 0 0 2px #b4d5ff; 
-        }
-    }
-}
-
-.modal-header, footer .oneline {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-    button {
-        outline: none;
-        border: none;
-        background-color: transparent;
-        height: fit-content;
-        padding: 5px;
-        border-radius: 5px;
-        font-size: 1rem;
-
-        &:hover {
-            background-color: #ddd;
-        }
-
-        &:active {
-            background-color: #999;
-        }
-    }
-}
-
-.modal-header h2 {
-    display: inline-block;
-    margin: 0;
+.editor {
+    padding: 5px 10px;
+    height: inherit;
+    max-height: calc(100% - 3rem);
 }
 
 kbd {
@@ -220,4 +42,15 @@ dl {
             content: ": "
         }
     }
+}
+
+.tippy-box[data-theme~=light-border][data-placement^=top]>.tippy-arrow:after {
+    top: 3px;
+    left: -7.5px;
+}
+
+.tippy-box[data-theme~=light-border] {
+    transform: translateY(10px);
+    padding: 3px;
+    border-radius: 3px;
 }
