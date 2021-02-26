@@ -1,15 +1,16 @@
 import React, { MouseEventHandler, useEffect, useRef } from 'react'
-import { Descendant, Range } from 'slate';
+import { Range } from 'slate';
 import { ReactEditor, useSlate } from 'slate-react';
 import styled from 'styled-components';
+import { DotAbbreviationRecord, DotAbbreviationValueProps } from '../interfaces/DotAbbrevMeta';
 
 import { Portal } from './Portal';
 
 interface Props {
     at: Range | null | undefined,
-    options: Record<string, Descendant[]>,
+    options: DotAbbreviationRecord,
     pos: number,
-    onClickItem?: (editor: ReactEditor, option: [key: string, value: Descendant[]]) => void,
+    onClickItem?: (editor: ReactEditor, option: [key: string, value: DotAbbreviationValueProps]) => void,
 }
 
 interface SelectItemProps {
@@ -42,7 +43,12 @@ export const FragmentInserterMenu: React.FC<Props> = ({ at, options, pos, onClic
             <HangingMenu ref={ref}>
                 {Object.entries(options).map(([opt, optVal], i) => (
                     <SelectItem key={opt} active={pos === i} onClick={e => onClickItem && onClickItem(editor, [opt, optVal])}>
-                        {opt}
+                        <div className="name">
+                            {opt}
+                        </div>
+                        <div className="description">
+                            {optVal.description}
+                        </div>
                     </SelectItem>
                 ))
                 }
@@ -69,7 +75,7 @@ const HangingMenu = styled.div`
     border-radius: 4px;
     box-shadow: 0 1px 5px rgba(0,0,0,0.2);
     overflow-y: scroll;
-    max-width: 500px;
+    max-width: 40vw;
     max-height: 10rem;
     
     .selector-item {
@@ -78,6 +84,23 @@ const HangingMenu = styled.div`
         background-color: transparent;
         cursor: pointer;
         transition: 0.3s ease all;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        .name {
+            font-weight: bold;
+            margin-right: 10px;
+            text-align: left;
+        }
+
+        .description {
+            display: flex;
+            flex-grow: 1;
+            color: #444;
+            font-size: 0.8rem;
+            justify-content: right;
+        }
 
         &:hover {
             background-color: #d2e6ff;

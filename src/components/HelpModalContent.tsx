@@ -27,7 +27,8 @@ export const HelpModalContent: React.FC =() => {
                 <dd>To insert a number template, type in <kbd>##</kbd></dd>
                 <dt>Formulae</dt>
                 <dd>To insert a formula, type in <kbd>$$</kbd>. You can use these to calculate expressions based on the values of other named template fields (similar to say, Excel).
-                Formulae are based on Nunjucks/Jinja2 so to find out what is supported, check <a href="https://mozilla.github.io/nunjucks/templating.html#expressions">here</a></dd>
+                Formulae are based on Nunjucks/Jinja2 so to find out what is supported, check <a href="https://mozilla.github.io/nunjucks/templating.html#expressions">here</a>. 
+                More formulae and documentation about them are in the works!</dd>
                 <dt>Voids</dt>
                 <dd>To insert a void (whose sole purpose is to be given a name and replaced), type in <kbd>**</kbd></dd>
               </dl>
@@ -48,7 +49,7 @@ export const HelpModalContent: React.FC =() => {
 
             <div className="modal-footer">
               <h2>Contributing/credits</h2>
-              <p>FastDischarge might frequently break and be full of bugs because it's still early days, so don't expect too much out of it!</p>
+              <p>FastDischarge is still a work in progress, with many new features on the roadmap.</p>
               <p>
                 If you have experience working with Slate.js, React.js or Typescript, please consider contributing to this project on <a href="https://github.com/newageoflight/fast-discharge">Github</a>.
               </p>
