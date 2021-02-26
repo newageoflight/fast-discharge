@@ -8,7 +8,7 @@ import { BaseTemplate } from './BaseTemplate';
 export const VoidTemplate: React.FC<RenderElementProps> = ({ attributes, element, children }) => {
     return (
         <BaseTemplate renderProps={{attributes, element, children}} tabIndex={0} canOverwrite={true}>
-            {({ name }) => <>{name}</>}
+            {({ name }) => <>{name || "(void)"}</>}
         </BaseTemplate>
     )
 }

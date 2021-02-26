@@ -21,9 +21,9 @@ export const NumberTemplate: React.FC<RenderElementProps> = ({attributes, elemen
     return (
         <BaseTemplate renderProps={{attributes, element, children}}>
             {({name, changeProps}) => <input type="number" value={value} onChange={event => modifyValue(event.target.valueAsNumber, changeProps)}
-                placeholder={name}
+                placeholder={name || "(number)"}
                 style={{
-                width: `${(value ? asString(value).length : name.length) + 3}ex`
+                width: `${(value ? asString(value).length : name ? name.length : 8) + 3}ex`
             }}/>}
         </BaseTemplate>
     )

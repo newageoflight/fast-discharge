@@ -44,7 +44,7 @@ export const ListTemplate: React.FC<RenderElementProps> = ({ attributes, element
                     ref={selectRef}
                     tabIndex={`0`}
                     styles={customSelectStyles} theme={customSelectTheme}
-                    placeholder={name}
+                    placeholder={name || (isMulti ? "Select many..." : "Select...")}
                     onChange={(newValue: any, actionMeta: any) => handleChange(newValue, actionMeta, changeProps)}
                     onCreateOption={(inputValue: any) => handleCreate(inputValue, changeProps)}
                     onMenuOpen={() => setMenuOpen(true)} onMenuClose={() => setMenuOpen(false)}

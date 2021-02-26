@@ -55,7 +55,7 @@ export const CodeTemplate: React.FC<RenderElementProps> = (props) => {
                         {!editing ? (
                             <>
                                 <div>
-                                    {result}
+                                    {result || "(formula)"}
                                 </div>
                             </>
                         ) : (
