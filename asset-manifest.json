@@ -1,24 +1,24 @@
 {
   "files": {
-    "main.css": "/static/css/main.d6110e1c.chunk.css",
-    "main.js": "/static/js/main.0a1a08f1.chunk.js",
-    "main.js.map": "/static/js/main.0a1a08f1.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.63ff86eb.js",
-    "runtime-main.js.map": "/static/js/runtime-main.63ff86eb.js.map",
-    "static/css/2.3bbd96bc.chunk.css": "/static/css/2.3bbd96bc.chunk.css",
-    "static/js/2.3b4af86f.chunk.js": "/static/js/2.3b4af86f.chunk.js",
-    "static/js/2.3b4af86f.chunk.js.map": "/static/js/2.3b4af86f.chunk.js.map",
-    "static/js/3.06be2206.chunk.js": "/static/js/3.06be2206.chunk.js",
-    "static/js/3.06be2206.chunk.js.map": "/static/js/3.06be2206.chunk.js.map",
-    "index.html": "/index.html",
-    "static/css/2.3bbd96bc.chunk.css.map": "/static/css/2.3bbd96bc.chunk.css.map",
-    "static/css/main.d6110e1c.chunk.css.map": "/static/css/main.d6110e1c.chunk.css.map",
-    "static/js/2.3b4af86f.chunk.js.LICENSE.txt": "/static/js/2.3b4af86f.chunk.js.LICENSE.txt"
+    "main.css": "/fast-discharge/static/css/main.d6110e1c.chunk.css",
+    "main.js": "/fast-discharge/static/js/main.0a1a08f1.chunk.js",
+    "main.js.map": "/fast-discharge/static/js/main.0a1a08f1.chunk.js.map",
+    "runtime-main.js": "/fast-discharge/static/js/runtime-main.d95a926b.js",
+    "runtime-main.js.map": "/fast-discharge/static/js/runtime-main.d95a926b.js.map",
+    "static/css/2.3bbd96bc.chunk.css": "/fast-discharge/static/css/2.3bbd96bc.chunk.css",
+    "static/js/2.cd387c19.chunk.js": "/fast-discharge/static/js/2.cd387c19.chunk.js",
+    "static/js/2.cd387c19.chunk.js.map": "/fast-discharge/static/js/2.cd387c19.chunk.js.map",
+    "static/js/3.06be2206.chunk.js": "/fast-discharge/static/js/3.06be2206.chunk.js",
+    "static/js/3.06be2206.chunk.js.map": "/fast-discharge/static/js/3.06be2206.chunk.js.map",
+    "index.html": "/fast-discharge/index.html",
+    "static/css/2.3bbd96bc.chunk.css.map": "/fast-discharge/static/css/2.3bbd96bc.chunk.css.map",
+    "static/css/main.d6110e1c.chunk.css.map": "/fast-discharge/static/css/main.d6110e1c.chunk.css.map",
+    "static/js/2.cd387c19.chunk.js.LICENSE.txt": "/fast-discharge/static/js/2.cd387c19.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.63ff86eb.js",
+    "static/js/runtime-main.d95a926b.js",
     "static/css/2.3bbd96bc.chunk.css",
-    "static/js/2.3b4af86f.chunk.js",
+    "static/js/2.cd387c19.chunk.js",
     "static/css/main.d6110e1c.chunk.css",
     "static/js/main.0a1a08f1.chunk.js"
   ]
