@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 
 import { EditorVariablesState } from '../../../../context/EditorContent';
 import { OneLine } from '../../../../components/OneLine';
+import { FancyButton } from '../../../../components/FancyButton';
 
 // executes arbitrary nunjucks code depending on the value of other named template fields
 // useful for conditional fields e.g. use "he" if patient is male or "she" if patient is female
@@ -65,9 +66,9 @@ export const CodeTemplate: React.FC<RenderElementProps> = (props) => {
                                        modifyValue(e.currentTarget.value, changeProps)
                                     }}} />
                         )}
-                        <button onClick={(e) => setEditing(!editing)}>
+                        <FancyButton onClick={(e) => setEditing(!editing)} theme={{main: {padding: 0}}}>
                             <InlineIcon icon="bx:bxs-pencil" />
-                        </button>
+                        </FancyButton>
                     </OneLine>
                 )
             }}

@@ -18,6 +18,7 @@ import { saveDotAbbrev } from './../editor/newPlugins/FragmentInserter/transform
 import { toClipboardHTML, toClipboardMD } from '../editor/utils/serialise';
 import { FunctionButtonsContainer } from './FunctionButtonsContainer';
 import { OneLine } from './OneLine';
+import { FancyButton } from './FancyButton';
 import { downloadFile, uploadSingleFile } from './../utils/fileHandling';
 import { EditorVariablesState, findTemplateVariables } from './../context/EditorContent';
 
@@ -123,7 +124,7 @@ export const TextEditor: React.FC = () => {
             <Modal isOpen={settingsOpen} onRequestClose={() => setSettingsOpen(false)}>
                 <OneLine>
                     <h1 style={{display: "inline-block", margin: 0}}>Settings</h1>
-                    <button onClick={() => setSettingsOpen(false)}><InlineIcon icon="eva:close-fill" /></button>
+                    <FancyButton onClick={() => setSettingsOpen(false)}><InlineIcon icon="eva:close-fill" /></FancyButton>
                 </OneLine>
                 <h2>Abbreviations</h2>
                 <p>Load my abbreviations: <button onClick={e => loadAbbrevsFromFile()}><InlineIcon icon="ic:baseline-file-upload" /></button></p>
