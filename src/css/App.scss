@@ -20,7 +20,7 @@ body, #root {
 .editor {
     padding: 5px 10px;
     height: inherit;
-    max-height: calc(100% - 3rem);
+    max-height: calc(100% - 3rem - 5px);
 }
 
 kbd {
