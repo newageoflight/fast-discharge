@@ -63,7 +63,7 @@ export const FragmentInserterPopup: React.FC<Props> = ({ setComplete, setFragmen
                             <label htmlFor="description">Description: </label>
                             <PrettyTextArea name="description" ref={register}></PrettyTextArea>
                         </FormRow>
-                        <button type="submit">Submit</button>
+                        <FancyButton type="submit" theme={{main: {border: "1px solid lightgrey", backgroundColor: "#eee", padding: "5px"}}}>Submit</FancyButton>
                     </form>
                 </PopupMenu>
             </DarkWrapper>
@@ -73,8 +73,8 @@ export const FragmentInserterPopup: React.FC<Props> = ({ setComplete, setFragmen
 
 const PopupMenu = styled.div`
     position: absolute;
-    top: 33%;
-    left: 33%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
     padding: 10px;
