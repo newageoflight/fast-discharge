@@ -1,5 +1,5 @@
-body {
-    overflow-y: hidden;
+body, #root {
+    height: 100vh;
 }
 
 .App {
@@ -53,4 +53,9 @@ dl {
     transform: translateY(10px);
     padding: 3px;
     border-radius: 3px;
+}
+
+.root-36 {
+    top: 0;
+    transition: none;
 }

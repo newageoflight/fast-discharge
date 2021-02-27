@@ -1,5 +1,4 @@
 import React from 'react'
-import SimpleBar from "simplebar-react";
 import styled from 'styled-components';
 
 export const FunctionButtonsContainer: React.FC = ({ children }) => {
@@ -14,7 +13,7 @@ const HorizontalScroller = styled.div`
     display: flex;
     flex-grow: 1;
     overflow-x: scroll;
-    scrollbar-width: 0;
+    scrollbar-width: none;
     
     > .slate-ToolbarButton {
         min-width: 25px;

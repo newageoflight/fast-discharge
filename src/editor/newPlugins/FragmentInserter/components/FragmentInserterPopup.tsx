@@ -75,6 +75,7 @@ const PopupMenu = styled.div`
     position: absolute;
     top: 33%;
     left: 33%;
+    transform: translate(-50%, -50%);
     background-color: white;
     padding: 10px;
     border: 1px solid lightgrey;
