@@ -7,11 +7,11 @@ import { TemplateBlockProps } from './../interfaces/Templates';
 import { useRecoilValue } from 'recoil';
 import { InlineIcon } from '@iconify/react-with-api';
 import AutosizeInput from 'react-input-autosize';
-import dayjs from "dayjs";
 
 import { EditorVariablesState } from '../../../../context/EditorContent';
 import { OneLine } from '../../../../components/OneLine';
 import { FancyButton } from '../../../../components/FancyButton';
+import { helperFunctions } from '../helpers/CodeTemplateFunctions';
 
 // executes arbitrary nunjucks code depending on the value of other named template fields
 // useful for conditional fields e.g. use "he" if patient is male or "she" if patient is female
@@ -84,10 +84,4 @@ export const CodeTemplate: React.FC<RenderElementProps> = (props) => {
             }}
         </BaseTemplate>
     )
-}
-
-const helperFunctions = {
-    dateDifference: (a: Date, b: Date, unit?: any) => {
-        return dayjs(a).diff(dayjs(b), unit)
-    }
 }

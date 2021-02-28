@@ -14,7 +14,6 @@ import { useTemplates } from './../editor/newPlugins/TemplateBlocks/useTemplates
 import { FragmentInserterMenu } from '../editor/newPlugins/FragmentInserter/components/FragmentInserterMenu';
 import { useFragmentInserter } from '../editor/newPlugins/FragmentInserter/useFragmentInserter';
 import { DotAbbrevsState } from './../context/DotAbbrevs';
-import { saveDotAbbrev } from './../editor/newPlugins/FragmentInserter/transforms/DotAbbreviations';
 import { toClipboardHTML, toClipboardMD } from '../editor/utils/serialise';
 import { FunctionButtonsContainer } from './FunctionButtonsContainer';
 import { OneLine } from './OneLine';
@@ -23,7 +22,6 @@ import { downloadFile, uploadSingleFile } from './../utils/fileHandling';
 import { EditorVariablesState, findTemplateVariables } from './../context/EditorContent';
 import { InitialState as initialValue } from '../context/InitialState';
 import { FragmentInserterPopup } from './../editor/newPlugins/FragmentInserter/components/FragmentInserterPopup';
-import { DotAbbreviationMetaProps } from './../editor/newPlugins/FragmentInserter/interfaces/DotAbbrevMeta';
 
 Modal.setAppElement("#root");
 
@@ -109,7 +107,7 @@ export const TextEditor: React.FC = () => {
                     <EditablePlugins plugins={plugins} placeholder="Enter some text..."
                         onKeyDown={[onKeyDownFragmentInserter]} onKeyDownDeps={[index, target, search]}
                         spellCheck autoFocus />
-                    <BalloonToolbar theme="dark" arrow={true}>
+                    <BalloonToolbar theme="dark" arrow={true} styles={{root: {top: 0, transition: 'none'}}}>
                         <ToolbarButton onMouseDown={e => {
                             setCreateSnippet(true);
                             setLastSelection(editor.selection);
