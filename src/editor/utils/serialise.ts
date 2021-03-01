@@ -80,7 +80,7 @@ const templatesToText = (node: Node): Node => {
                     // console.log(dateAsString)
                     return {text: dateAsString ? dateAsString : ""}
                 default:
-                    return {text: ""}
+                    return {text: (newNode.defaultValue ? (newNode.defaultValue as any) : "")}
             }
         default:
             return newNode

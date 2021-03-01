@@ -2,7 +2,6 @@ import { atom } from 'recoil';
 import { SlateDocument } from '@udecode/slate-plugins';
 import { Editor, Node, Path } from 'slate';
 import { OptionType, legalVariableTypes, TemplateBlockNode, TemplateVariable } from '../editor/newPlugins/TemplateBlocks/interfaces/Templates';
-import { nanoid } from 'nanoid';
 
 const EditorState = localStorage.getItem("content")
 
@@ -54,6 +53,8 @@ export const findTemplateVariables = (editor: Editor): Record<string, TemplateVa
                 }
                 if (node.name)
                     variables[(node.name as string)] = {templateType: (node.templateType as TemplateVariable["templateType"]), value: val}
+                else
+                    variables[(node.uid as string)] = {templateType: (node.templateType as TemplateVariable["templateType"]), value: val}
             }
         }
     }

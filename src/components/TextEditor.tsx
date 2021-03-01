@@ -66,6 +66,7 @@ export const TextEditor: React.FC = () => {
                 const content = JSON.stringify(value);
                 localStorage.setItem("content", content)
                 let vars = findTemplateVariables(editor);
+                console.log(vars)
                 setTemplateVars(vars);
 
                 onChangeFragmentInserter(editor);

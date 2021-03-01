@@ -17,6 +17,7 @@ export type OptionType = {
 
 export interface TemplateBlockProps {
     name?: string;
+    uid?: string;
     canOvertype?: boolean;
     templateType?: "void" | "date" | "select" | "multiselect" | "ref" | "expr" | "wiz" | "number";
     opts?: OptionType[];
