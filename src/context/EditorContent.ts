@@ -15,7 +15,7 @@ export const EditorVariablesState = atom<Record<string, TemplateVariable>>({
     default: {}
 })
 
-// this should only run when the editor initialises
+// this should only run when a template changes
 export const findTemplateVariables = (editor: Editor): Record<string, TemplateVariable> => {
     const [,startPoint] = Editor.first(editor, [])
     const [,endPoint] = Editor.last(editor, [])

@@ -3,6 +3,7 @@ import { Range } from 'slate';
 import { ReactEditor, useSlate } from 'slate-react';
 import styled from 'styled-components';
 import { DotAbbreviationRecord, DotAbbreviationValueProps } from '../interfaces/DotAbbrevMeta';
+import useOnScreen from '../utils/isInView';
 
 import { Portal } from './Portal';
 
@@ -58,8 +59,18 @@ export const FragmentInserterMenu: React.FC<Props> = ({ at, options, pos, onClic
 }
 
 const SelectItem: React.FC<SelectItemProps> = ({ active, children, onClick }) => {
+    const ref = useRef<HTMLDivElement>(null)
+    const isVisible = useOnScreen(ref);
+    
+    useEffect(() => {
+        if (active && !isVisible) {
+            const el = ref.current;
+            el && el.scrollIntoView({block: "nearest"});
+        }
+    }, [active])
+
     return (
-        <div className={`selector-item ${active ? "active-item" : ""}`} onMouseDown={onClick}>
+        <div className={`selector-item ${active ? "active-item" : ""}`} onMouseDown={onClick} ref={ref}>
             {children}
         </div>
     )

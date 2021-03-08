@@ -129,13 +129,29 @@ const preprocessMDNode = (node: Node): Node => {
 export const toClipboardHTML = (editor: Editor, plugins: SlatePlugin[]): void => {
     // can't use the new async clipboard API because it doesn't support rich text
     // i normally try to avoid installing packages if i can help it but anyway, here we are
+    // convert any templates to their text values first
+    const preprocessed = editor.children.map(preprocessHTMLNode)
     const item = new clipboard.ClipboardItem({
-        "text/html": new Blob([serializeHTMLFromNodes({ plugins, nodes: editor.children })], {type: "text/html"}),
+        "text/html": new Blob([serializeHTMLFromNodes({ plugins, nodes: preprocessed })], {type: "text/html"}),
     })
     try {
         clipboard.write([item]);
         window.alert("Copied successfully!")
     } catch (error) {
         window.alert("Copying failed!")
+    }
+}
+
+const preprocessHTMLNode = (node: Node): Node => {
+    let newNode = {...node};
+
+    if (newNode.children)
+        newNode.children = (newNode.children as Node[]).map(preprocessMDNode)
+    
+    switch (newNode.type) {
+        case "template-block":
+            return templatesToText(node);
+        default:
+            return newNode;
     }
 }

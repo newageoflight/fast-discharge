@@ -65,11 +65,11 @@ export const CodeTemplate: React.FC<RenderElementProps> = (props) => {
                         {!editing ? (
                             <>
                                 <div>
-                                    {result || (value ? "~NULL~" : "(formula)")}
+                                    {result || ((!!value || value.length === 0) ? "~NULL~" : "(formula)")}
                                 </div>
                             </>
                         ) : (
-                            <AutosizeInput placeholder={name} value={value} onChange={(event) => setValue(event.target.value)}
+                            <AutosizeInput placeholder={name || "Enter formula..."} value={value} onChange={(event) => setValue(event.target.value)}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter") {
                                        setEditing(false)

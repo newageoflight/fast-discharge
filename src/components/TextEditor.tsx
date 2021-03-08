@@ -55,7 +55,9 @@ export const TextEditor: React.FC = () => {
         fr.readAsText(file);
         fr.onload = event => {
             let loaded = JSON.parse((event.target!.result as string));
-            setDotAbbrevs(loaded);
+            let newAbbrevs = {...dotAbbrevs, ...loaded};
+            setDotAbbrevs(newAbbrevs);
+            localStorage.setItem("dotAbbrevs", JSON.stringify(newAbbrevs));
         }
     }, ["fda"])
 
@@ -66,7 +68,7 @@ export const TextEditor: React.FC = () => {
                 const content = JSON.stringify(value);
                 localStorage.setItem("content", content)
                 let vars = findTemplateVariables(editor);
-                console.log(vars)
+                // console.log(vars)
                 setTemplateVars(vars);
 
                 onChangeFragmentInserter(editor);
@@ -97,8 +99,8 @@ export const TextEditor: React.FC = () => {
                         <ToolbarButton onMouseDown={e => toClipboardMD(editor)} icon={<InlineIcon icon="ion:copy-outline" />} tooltip={{content: "Copy to clipboard as plain text/Markdown", theme: 'light-border'}} />
                         <ToolbarButton onMouseDown={e => toClipboardHTML(editor, plugins)} icon={<InlineIcon icon="ion:copy" />} tooltip={{content: "Copy to clipboard", theme: 'light-border'}} />
                         <ToolbarButton onMouseDown={e => {e.preventDefault(); Transforms.insertText(editor, ".$")}} icon={<InlineIcon icon="uil:brackets-curly" />} tooltip={{content: "Insert a snippet", theme: 'light-border'}} />
-                        <ToolbarButton onMouseDown={e => exportTemplateAsFile()} icon={<InlineIcon icon="bx:bxs-download" />} tooltip={{content: "Save contents of editor to a file", theme: "light-border"}} />
-                        <ToolbarButton onMouseDown={e => loadTemplateFromFile()} icon={<InlineIcon icon="ic:baseline-file-upload" />} tooltip={{content: "Load fdt file into editor", theme: "light-border"}} />
+                        <ToolbarButton onMouseDown={exportTemplateAsFile} icon={<InlineIcon icon="bx:bxs-download" />} tooltip={{content: "Save contents of editor to a file", theme: "light-border"}} />
+                        <ToolbarButton onMouseDown={loadTemplateFromFile} icon={<InlineIcon icon="ic:baseline-file-upload" />} tooltip={{content: "Load fdt file into editor", theme: "light-border"}} />
                     </FunctionButtonsContainer>
                     <div className="settings-buttons">
                         <ToolbarButton onMouseDown={e => setSettingsOpen(true)} icon={<InlineIcon icon="carbon:settings-adjust" />} tooltip={{content: "Settings", theme: "light-border"}} />
@@ -115,7 +117,7 @@ export const TextEditor: React.FC = () => {
                         }} icon={<InlineIcon icon="bi:dot" />} tooltip={{content: "Store selection as a snippet", theme: "light-border"}} />
                     </BalloonToolbar>
                     <FragmentInserterMenu at={target} pos={index} options={searchedAbbrevs} onClickItem={onInsertFragment} />
-                    {createSnippet && <FragmentInserterPopup setComplete={v => setCreateSnippet(!v)} setFragments={setDotAbbrevs} lastSelection={lastSelection} />}
+                    {createSnippet && <FragmentInserterPopup setComplete={v => setCreateSnippet(!v)} lastSelection={lastSelection} />}
                 </SimpleBar>
             </Slate>
             <Modal isOpen={settingsOpen} onRequestClose={() => setSettingsOpen(false)}>
@@ -124,8 +126,8 @@ export const TextEditor: React.FC = () => {
                     <FancyButton onClick={() => setSettingsOpen(false)}><InlineIcon icon="eva:close-fill" /></FancyButton>
                 </OneLine>
                 <h2>Abbreviations</h2>
-                <p>Load my abbreviations: <FancyButton onClick={e => loadAbbrevsFromFile()}><InlineIcon icon="ic:baseline-file-upload" /></FancyButton></p>
-                <p>Save my abbreviations: <FancyButton onClick={e => exportAbbrevsAsFile()}><InlineIcon icon="bx:bxs-download" /></FancyButton></p>
+                <p>Load my abbreviations: <FancyButton onClick={loadAbbrevsFromFile}><InlineIcon icon="ic:baseline-file-upload" /></FancyButton></p>
+                <p>Save my abbreviations: <FancyButton onClick={exportAbbrevsAsFile}><InlineIcon icon="bx:bxs-download" /></FancyButton></p>
                 <p>[this section under construction!]</p>
             </Modal>
         </>

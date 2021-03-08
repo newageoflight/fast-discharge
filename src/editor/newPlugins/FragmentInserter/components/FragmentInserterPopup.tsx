@@ -8,33 +8,34 @@ import { Portal } from 'react-portal';
 import { InlineIcon } from '@iconify/react-with-api';
 import { FancyButton } from '../../../../components/FancyButton';
 import { OneLine } from './../../../../components/OneLine';
+import { useRecoilState } from 'recoil';
+import { DotAbbrevsState } from './../../../../context/DotAbbrevs';
 
 interface Props {
     setComplete: (value: boolean) => void;
-    setFragments: (value: any) => void;
     lastSelection: any;
 }
 
 // popup with a form to create a new snippet
-export const FragmentInserterPopup: React.FC<Props> = ({ setComplete, setFragments, lastSelection }) => {
+export const FragmentInserterPopup: React.FC<Props> = ({ setComplete, lastSelection }) => {
     const editor = useEditor();
+    const [dotAbbrevs, setDotAbbrevs] = useRecoilState(DotAbbrevsState);
     
     const { register, handleSubmit, errors } = useForm()
     const onSubmit = (data: DotAbbreviationMetaProps) => {
         const { name, description } = data;
-        const existingAbbrevs = localStorage.getItem("dotAbbrevs") && JSON.parse(localStorage.getItem("dotAbbrevs")!)
         // get the fragment
         let fragment = Editor.fragment(editor, lastSelection)
         // first a dialogue should pop up asking the user to name the fragment
         let fragmentObject: DotAbbreviationRecord = {}
         fragmentObject[name] = {description, value: fragment} as DotAbbreviationValueProps;
         let newAbbrevs;
-        if (existingAbbrevs) {
-            newAbbrevs = {...existingAbbrevs, ...fragmentObject}
+        if (dotAbbrevs) {
+            newAbbrevs = {...dotAbbrevs, ...fragmentObject}
         } else {
             newAbbrevs = {...fragmentObject}
         }
-        setFragments(newAbbrevs);
+        setDotAbbrevs(newAbbrevs);
         localStorage.setItem("dotAbbrevs", JSON.stringify(newAbbrevs))
         setComplete(true);
     }

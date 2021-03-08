@@ -28,7 +28,7 @@ export const HelpModalContent: React.FC =() => {
                 <dt>Formulae</dt>
                 <dd>To insert a formula, type in <kbd>$$</kbd>. You can use these to calculate expressions based on the values of other named template fields (similar to say, Excel).
                 Formulae are based on Nunjucks/Jinja2 so to find out what is supported, check <a href="https://mozilla.github.io/nunjucks/templating.html#expressions">here</a>. 
-                More formulae and documentation about them are in the works!</dd>
+                Check the wiki on Github for more information about supported formulae</dd>
                 <dt>Voids</dt>
                 <dd>To insert a void (whose sole purpose is to be given a name and replaced), type in <kbd>**</kbd></dd>
               </dl>
