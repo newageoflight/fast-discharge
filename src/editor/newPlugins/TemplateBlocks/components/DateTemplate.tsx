@@ -29,6 +29,8 @@ export const DateTemplate: React.FC<RenderElementProps> = ({ attributes, childre
             {({ name, changeProps, setOnTop }) => {
                 return <DatePicker todayButton="Today" selected={chosenDate} onChange={(date: Date) => modifyDate(date, changeProps)}
                     isClearable placeholderText={name} dateFormat="dd/MM/yyyy"
+                    showMonthDropdown showYearDropdown dropdownMode="select"
+                    enableTabLoop={false}
                     onCalendarOpen={() => setOnTop(true)} onCalendarClose={() => setOnTop(false)} />
             }
             }

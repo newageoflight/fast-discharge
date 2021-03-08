@@ -7,4 +7,10 @@ export const helperFunctions = {
     formatDate: (d: Date, format?: string) => {
         return dayjs(d).format(format)
     },
+    datePlus: (a: Date, b: number, unit?: any) => {
+        return dayjs(a).add(b, unit)
+    },
+    dateMinus: (a: Date, b: number, unit?: any) => {
+        return dayjs(a).subtract(b, unit)
+    },
 }

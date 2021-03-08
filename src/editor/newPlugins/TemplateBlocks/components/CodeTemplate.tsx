@@ -15,6 +15,7 @@ import { helperFunctions } from '../helpers/CodeTemplateFunctions';
 
 // executes arbitrary nunjucks code depending on the value of other named template fields
 // useful for conditional fields e.g. use "he" if patient is male or "she" if patient is female
+// you could also use safe-eval for this?
 
 export const CodeTemplate: React.FC<RenderElementProps> = (props) => {
     const editor = useEditor()
@@ -65,7 +66,7 @@ export const CodeTemplate: React.FC<RenderElementProps> = (props) => {
                         {!editing ? (
                             <>
                                 <div>
-                                    {result || ((!!value || value.length === 0) ? "~NULL~" : "(formula)")}
+                                    {(valueNotEmpty(value) ? (result || "~NULL~") : "(formula)")}
                                 </div>
                             </>
                         ) : (
@@ -84,4 +85,11 @@ export const CodeTemplate: React.FC<RenderElementProps> = (props) => {
             }}
         </BaseTemplate>
     )
+}
+
+const valueNotEmpty = (value: string | undefined): boolean => {
+    if (value != null) {
+        return value.length > 0 || !!value
+    }
+    return false;
 }

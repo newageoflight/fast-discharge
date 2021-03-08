@@ -40,7 +40,7 @@ export const ListTemplate: React.FC<RenderElementProps> = ({ attributes, element
         <BaseTemplate renderProps={{attributes, element, children}}>
             {
             ({ name, setOnTop: setMenuOpen, changeProps }) =>
-                (<CreatableSelect isMulti={isMulti}
+                (<CreatableSelect isMulti={isMulti} isClearable
                     ref={selectRef}
                     tabIndex={`0`}
                     styles={customSelectStyles} theme={customSelectTheme}
