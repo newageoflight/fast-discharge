@@ -8,6 +8,7 @@ import React from 'react'
 // you insert a ref by typing %% and then it gives you a dropdown of "ref sources" to choose from
 // to query the ref source via the ref plugin you need to provide it some mandatory data e.g. mrn, dob, etc.
 // the ref then renders a special highlight which can give you the stuff you need
+// alternatively you can use a syntax similar to EPIC e.g. %mediweb%
 
 export const RefSelectTemplate: React.FC = () => {
     return (

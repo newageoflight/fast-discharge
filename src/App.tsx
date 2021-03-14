@@ -24,7 +24,7 @@ function App() {
           FastDischarge
         </h1>
       </header>
-      <EditorContainer>
+      <EditorContainer id="editor-container">
         <TextEditor />
       </EditorContainer>
       <footer>

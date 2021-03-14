@@ -32,6 +32,17 @@ export const FragmentInserterMenu: React.FC<Props> = ({ at, options, pos, onClic
             if (el) {
                 el.style.top = `${rect.top + window.pageYOffset + 24}px`
                 el.style.left = `${rect.left + window.pageXOffset}px`
+                
+                let { offsetHeight, offsetWidth } = el;
+                let { top, left } = el.getBoundingClientRect()
+                let verticallyContained = (top + offsetHeight <= window.innerHeight)
+                let horizontallyContained = (left + offsetWidth <= window.innerWidth)
+                if (!verticallyContained) {
+                    el.style.top = `${rect.top + window.pageYOffset - offsetHeight}px`
+                }
+                if (!horizontallyContained) {
+                    el.style.left = `${rect.left + window.pageXOffset - offsetWidth}px`
+                }
             }
         }
     }, [options, editor, at])
